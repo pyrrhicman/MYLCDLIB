@@ -125,22 +125,22 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
 	uint8_t lcd_D7 = command >> 7;
 	
 // FIRST MSB BITS SENDING
-	if (rs_Bit & 1) _SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
+	if (rs_Bit & 1)  _SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
 	else			 _SFR_IO8(RS_PORT) &= ~(1<<RS_Bit);
 	
-	if (rw_Bit & 1) _SFR_IO8(RW_PORT) |=   1<<RW_Bit ;
+	if (rw_Bit & 1)  _SFR_IO8(RW_PORT) |=   1<<RW_Bit ;
 	else			 _SFR_IO8(RW_PORT) &= ~(1<<RW_Bit);
 	
-	if (lcd_D7 & 1) _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;	
+	if (lcd_D7 & 1)  _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;	
 	else			 _SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);	
 
-	if (lcd_D6 & 1) _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
+	if (lcd_D6 & 1)  _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
 	else			 _SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
 	
-	if (lcd_D5 & 1) _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
+	if (lcd_D5 & 1)  _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
 	else			 _SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
 	
-	if (lcd_D4 & 1) _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
+	if (lcd_D4 & 1)  _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
 	else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
 
 	//SENDING
@@ -151,23 +151,30 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
 	
 	
 // SECEND LSB BITS SENDING
-if (lcd_D3 & 1) _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;
+if (lcd_D3 & 1)  _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;
 else			 _SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);
 
-if (lcd_D2 & 1) _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
+if (lcd_D2 & 1)  _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
 else			 _SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
 
-if (lcd_D1 & 1) _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
+if (lcd_D1 & 1)  _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
 else			 _SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
 	
-if (lcd_D0 & 1) _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
+if (lcd_D0 & 1)  _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
 else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
 
 //SENDING
-_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
-_delay_ms(E_DELAY);
-_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
-_delay_ms(E_DELAY);
+	_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
+	_delay_ms(E_DELAY);
+	_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
+	_delay_ms(E_DELAY);
+	
+	_SFR_IO8(RS_PORT) &= ~(1<<RS_Bit);
+	_SFR_IO8(RW_PORT) &= ~(1<<RW_Bit);
+	_SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);
+	_SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
+	_SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
+	_SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
 }
 
 

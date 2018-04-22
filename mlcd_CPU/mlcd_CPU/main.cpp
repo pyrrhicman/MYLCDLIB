@@ -2,7 +2,7 @@
 //ATMEGA32
 #define F_CPU 8000000UL
 #define _CH_LCD_
-#define delay 10
+#define delay 1
 #include "D:\GitHub\MYLCDLIB\Lib\mlcd.cpp"
 #include "D:\GitHub\MYLCDLIB\Lib\mlcd.h"
 
@@ -21,10 +21,6 @@ int main(void)
 	LCD1.SetD7Pin (ADD(PORTC),ADD(DDRC),6);
 	LCD1.Init();
 	
-	//PORTC=255;
-	//_delay_ms(2000);
-	//PORTC = 0;
-	//_delay_ms(2000);	
 	LCD1.SendCommand(0,0,0B00100000);//3
 	_delay_ms(delay);
 	LCD1.SendCommand(0,0,0B00001110);//4
@@ -33,11 +29,11 @@ int main(void)
 	_delay_ms(delay);
 	LCD1.SendCommand(1,0,0B01001000);//6
 	_delay_ms(delay);
-	//LCD1.SendCommand(1,0,0B01001001);//7
-	//_delay_ms(delay);
-	while(1){
-			LCD1.SendCommand(1,0,0B01001000);//6
-			_delay_ms(1000);
-		
-		}
+	
+	while(1)
+	{
+	LCD1.SendCommand(1,0,0B01001000);//6
+	_delay_ms(250);
+	}
+	
 }
