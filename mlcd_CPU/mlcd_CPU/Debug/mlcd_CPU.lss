@@ -3,31 +3,31 @@ mlcd_CPU.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000061a  00000000  00000000  00000074  2**1
+  0 .text         0000087e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  0000068e  2**0
+  1 .data         00000000  00800060  00800060  000008f2  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000016  00800060  00800060  0000068e  2**0
+  2 .bss          00000016  00800060  00800060  000008f2  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  0000068e  2**0
+  3 .comment      00000030  00000000  00000000  000008f2  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000006c0  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000924  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000040  00000000  00000000  000006fc  2**0
+  5 .debug_aranges 00000040  00000000  00000000  00000960  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000100a  00000000  00000000  0000073c  2**0
+  6 .debug_info   00001126  00000000  00000000  000009a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000006ee  00000000  00000000  00001746  2**0
+  7 .debug_abbrev 0000070a  00000000  00000000  00001ac6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000005ae  00000000  00000000  00001e34  2**0
+  8 .debug_line   00000546  00000000  00000000  000021d0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000084  00000000  00000000  000023e4  2**2
+  9 .debug_frame  000000a0  00000000  00000000  00002718  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005f2  00000000  00000000  00002468  2**0
+ 10 .debug_str    000005f2  00000000  00000000  000027b8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000072c  00000000  00000000  00002a5a  2**0
+ 11 .debug_loc    00000732  00000000  00000000  00002daa  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000030  00000000  00000000  00003186  2**0
+ 12 .debug_ranges 00000030  00000000  00000000  000034dc  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -56,7 +56,7 @@ Disassembly of section .text:
   50:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
 
 00000054 <__ctors_start>:
-  54:	00 03       	mulsu	r16, r16
+  54:	32 04       	cpc	r3, r2
 
 00000056 <__ctors_end>:
   56:	11 24       	eor	r1, r1
@@ -87,49 +87,58 @@ Disassembly of section .text:
   78:	04 c0       	rjmp	.+8      	; 0x82 <__do_global_ctors+0x10>
   7a:	21 97       	sbiw	r28, 0x01	; 1
   7c:	fe 01       	movw	r30, r28
-  7e:	0e 94 05 03 	call	0x60a	; 0x60a <__tablejump2__>
+  7e:	0e 94 37 04 	call	0x86e	; 0x86e <__tablejump2__>
   82:	ca 32       	cpi	r28, 0x2A	; 42
   84:	d1 07       	cpc	r29, r17
   86:	c9 f7       	brne	.-14     	; 0x7a <__do_global_ctors+0x8>
-  88:	0e 94 db 02 	call	0x5b6	; 0x5b6 <main>
-  8c:	0c 94 0b 03 	jmp	0x616	; 0x616 <_exit>
+  88:	0e 94 cb 03 	call	0x796	; 0x796 <main>
+  8c:	0c 94 3d 04 	jmp	0x87a	; 0x87a <_exit>
 
 00000090 <__bad_interrupt>:
   90:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000094 <_ZN6CH_LCDC1Ev>:
-	      X  X  RS RW D7 D6 D5 D4
-	*/
-	
+﻿#include "mlcd.h"
+#define E_DELAY 1
+# ifdef _CH_LCD_
 
 
-}
+CH_LCD :: CH_LCD ()
   94:	fc 01       	movw	r30, r24
+{
+	RS_PORT = 0x1B ; RS_DDR = 0x1A ; RS_Bit = 0 ;
   96:	9b e1       	ldi	r25, 0x1B	; 27
   98:	90 83       	st	Z, r25
   9a:	8a e1       	ldi	r24, 0x1A	; 26
   9c:	81 83       	std	Z+1, r24	; 0x01
   9e:	12 82       	std	Z+2, r1	; 0x02
+	RW_PORT = 0x1B ; RW_DDR = 0x1A ; RW_Bit = 1 ;
   a0:	93 83       	std	Z+3, r25	; 0x03
   a2:	84 83       	std	Z+4, r24	; 0x04
   a4:	21 e0       	ldi	r18, 0x01	; 1
   a6:	25 83       	std	Z+5, r18	; 0x05
+	E_PORT = 0x1B ; E_DDR = 0x1A ; E_Bit  = 2 ;
   a8:	96 83       	std	Z+6, r25	; 0x06
   aa:	87 83       	std	Z+7, r24	; 0x07
   ac:	22 e0       	ldi	r18, 0x02	; 2
   ae:	20 87       	std	Z+8, r18	; 0x08
+
+	D4_PORT = 0x1B ; D4_DDR = 0x1A ; D4_Bit = 3 ;
   b0:	91 87       	std	Z+9, r25	; 0x09
   b2:	82 87       	std	Z+10, r24	; 0x0a
   b4:	23 e0       	ldi	r18, 0x03	; 3
   b6:	23 87       	std	Z+11, r18	; 0x0b
+	D5_PORT = 0x1B ; D5_DDR = 0x1A ; D5_Bit = 4 ;
   b8:	94 87       	std	Z+12, r25	; 0x0c
   ba:	85 87       	std	Z+13, r24	; 0x0d
   bc:	24 e0       	ldi	r18, 0x04	; 4
   be:	26 87       	std	Z+14, r18	; 0x0e
+	D6_PORT = 0x1B ; D6_DDR = 0x1A ; D6_Bit = 5 ;
   c0:	97 87       	std	Z+15, r25	; 0x0f
   c2:	80 8b       	std	Z+16, r24	; 0x10
   c4:	25 e0       	ldi	r18, 0x05	; 5
   c6:	21 8b       	std	Z+17, r18	; 0x11
+	D7_PORT = 0x1B ; D7_DDR = 0x1A ; D7_Bit = 6 ;	
   c8:	92 8b       	std	Z+18, r25	; 0x12
   ca:	83 8b       	std	Z+19, r24	; 0x13
   cc:	86 e0       	ldi	r24, 0x06	; 6
@@ -137,13 +146,27 @@ Disassembly of section .text:
   d0:	08 95       	ret
 
 000000d2 <_ZN6CH_LCD4InitEv>:
+}
+
+void CH_LCD :: Init()//Initializes LCD
+{
   d2:	fc 01       	movw	r30, r24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
   d4:	8f e2       	ldi	r24, 0x2F	; 47
   d6:	95 e7       	ldi	r25, 0x75	; 117
   d8:	01 97       	sbiw	r24, 0x01	; 1
   da:	f1 f7       	brne	.-4      	; 0xd8 <_ZN6CH_LCD4InitEv+0x6>
   dc:	00 c0       	rjmp	.+0      	; 0xde <_ZN6CH_LCD4InitEv+0xc>
   de:	00 00       	nop
+	_delay_ms(15);
+
+	/////////////////////////////	SETTING DDR		///////////////////////////
+	_SFR_IO8(D4_PORT) &= ~(1<<D4_Bit) ; // THESE 5 IS GOING TO TURN D4,D5,D6,D7,EN To INPUT
   e0:	a1 85       	ldd	r26, Z+9	; 0x09
   e2:	b0 e0       	ldi	r27, 0x00	; 0
   e4:	90 96       	adiw	r26, 0x20	; 32
@@ -163,6 +186,7 @@ Disassembly of section .text:
  100:	23 23       	and	r18, r19
  102:	90 96       	adiw	r26, 0x20	; 32
  104:	2c 93       	st	X, r18
+	_SFR_IO8(D5_PORT) &= ~(1<<D5_Bit) ;
  106:	a4 85       	ldd	r26, Z+12	; 0x0c
  108:	b0 e0       	ldi	r27, 0x00	; 0
  10a:	90 96       	adiw	r26, 0x20	; 32
@@ -180,6 +204,7 @@ Disassembly of section .text:
  122:	23 23       	and	r18, r19
  124:	90 96       	adiw	r26, 0x20	; 32
  126:	2c 93       	st	X, r18
+	_SFR_IO8(D6_PORT) &= ~(1<<D6_Bit) ;
  128:	a7 85       	ldd	r26, Z+15	; 0x0f
  12a:	b0 e0       	ldi	r27, 0x00	; 0
  12c:	90 96       	adiw	r26, 0x20	; 32
@@ -197,6 +222,7 @@ Disassembly of section .text:
  144:	23 23       	and	r18, r19
  146:	90 96       	adiw	r26, 0x20	; 32
  148:	2c 93       	st	X, r18
+	_SFR_IO8(D7_PORT) &= ~(1<<D7_Bit) ;
  14a:	a2 89       	ldd	r26, Z+18	; 0x12
  14c:	b0 e0       	ldi	r27, 0x00	; 0
  14e:	90 96       	adiw	r26, 0x20	; 32
@@ -214,6 +240,7 @@ Disassembly of section .text:
  166:	23 23       	and	r18, r19
  168:	90 96       	adiw	r26, 0x20	; 32
  16a:	2c 93       	st	X, r18
+	_SFR_IO8(E_PORT)  &= ~(1<<E_Bit);
  16c:	a6 81       	ldd	r26, Z+6	; 0x06
  16e:	b0 e0       	ldi	r27, 0x00	; 0
  170:	90 96       	adiw	r26, 0x20	; 32
@@ -231,6 +258,10 @@ Disassembly of section .text:
  188:	23 23       	and	r18, r19
  18a:	90 96       	adiw	r26, 0x20	; 32
  18c:	2c 93       	st	X, r18
+	//D4  D5  D6  D7	SETTING DDR
+	//0   0   0   0
+	
+	_SFR_IO8(D4_DDR)  |= 1<<D4_Bit ;
  18e:	a2 85       	ldd	r26, Z+10	; 0x0a
  190:	b0 e0       	ldi	r27, 0x00	; 0
  192:	90 96       	adiw	r26, 0x20	; 32
@@ -246,6 +277,7 @@ Disassembly of section .text:
  1a6:	24 2b       	or	r18, r20
  1a8:	90 96       	adiw	r26, 0x20	; 32
  1aa:	2c 93       	st	X, r18
+	_SFR_IO8(D5_DDR)  |= 1<<D5_Bit ;
  1ac:	a5 85       	ldd	r26, Z+13	; 0x0d
  1ae:	b0 e0       	ldi	r27, 0x00	; 0
  1b0:	90 96       	adiw	r26, 0x20	; 32
@@ -261,6 +293,7 @@ Disassembly of section .text:
  1c4:	24 2b       	or	r18, r20
  1c6:	90 96       	adiw	r26, 0x20	; 32
  1c8:	2c 93       	st	X, r18
+	_SFR_IO8(D6_DDR)  |= 1<<D6_Bit ;
  1ca:	a0 89       	ldd	r26, Z+16	; 0x10
  1cc:	b0 e0       	ldi	r27, 0x00	; 0
  1ce:	90 96       	adiw	r26, 0x20	; 32
@@ -276,6 +309,7 @@ Disassembly of section .text:
  1e2:	24 2b       	or	r18, r20
  1e4:	90 96       	adiw	r26, 0x20	; 32
  1e6:	2c 93       	st	X, r18
+	_SFR_IO8(D7_DDR)  |= 1<<D7_Bit ;
  1e8:	a3 89       	ldd	r26, Z+19	; 0x13
  1ea:	b0 e0       	ldi	r27, 0x00	; 0
  1ec:	90 96       	adiw	r26, 0x20	; 32
@@ -291,6 +325,7 @@ Disassembly of section .text:
  200:	24 2b       	or	r18, r20
  202:	90 96       	adiw	r26, 0x20	; 32
  204:	2c 93       	st	X, r18
+	_SFR_IO8(E_DDR)   |= 1<<E_Bit  ;
  206:	a7 81       	ldd	r26, Z+7	; 0x07
  208:	b0 e0       	ldi	r27, 0x00	; 0
  20a:	90 96       	adiw	r26, 0x20	; 32
@@ -306,6 +341,7 @@ Disassembly of section .text:
  21e:	24 2b       	or	r18, r20
  220:	90 96       	adiw	r26, 0x20	; 32
  222:	2c 93       	st	X, r18
+	_SFR_IO8(RS_DDR)  |= 1<<RS_Bit ;
  224:	a1 81       	ldd	r26, Z+1	; 0x01
  226:	b0 e0       	ldi	r27, 0x00	; 0
  228:	90 96       	adiw	r26, 0x20	; 32
@@ -321,6 +357,7 @@ Disassembly of section .text:
  23c:	24 2b       	or	r18, r20
  23e:	90 96       	adiw	r26, 0x20	; 32
  240:	2c 93       	st	X, r18
+	_SFR_IO8(RW_DDR)  |= 1<<RW_Bit ;
  242:	a4 81       	ldd	r26, Z+4	; 0x04
  244:	b0 e0       	ldi	r27, 0x00	; 0
  246:	90 96       	adiw	r26, 0x20	; 32
@@ -336,514 +373,918 @@ Disassembly of section .text:
  25a:	24 2b       	or	r18, r20
  25c:	90 96       	adiw	r26, 0x20	; 32
  25e:	2c 93       	st	X, r18
- 260:	a1 85       	ldd	r26, Z+9	; 0x09
+	//D4  D5  D6  D7  E  RS  RW			SETTING DDR
+	//1   1   1	  1   1  1   1
+	/////////////////////////////	SETTING DDR	DONE	///////////////////////////
+
+	//_SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
+	_SFR_IO8(RS_PORT) &= ~(1<<RS_Bit);
+ 260:	a0 81       	ld	r26, Z
  262:	b0 e0       	ldi	r27, 0x00	; 0
  264:	90 96       	adiw	r26, 0x20	; 32
- 266:	4c 91       	ld	r20, X
+ 266:	3c 91       	ld	r19, X
  268:	90 97       	sbiw	r26, 0x20	; 32
- 26a:	9c 01       	movw	r18, r24
- 26c:	03 84       	ldd	r0, Z+11	; 0x0b
+ 26a:	ac 01       	movw	r20, r24
+ 26c:	02 80       	ldd	r0, Z+2	; 0x02
  26e:	02 c0       	rjmp	.+4      	; 0x274 <_ZN6CH_LCD4InitEv+0x1a2>
- 270:	22 0f       	add	r18, r18
- 272:	33 1f       	adc	r19, r19
+ 270:	44 0f       	add	r20, r20
+ 272:	55 1f       	adc	r21, r21
  274:	0a 94       	dec	r0
  276:	e2 f7       	brpl	.-8      	; 0x270 <_ZN6CH_LCD4InitEv+0x19e>
- 278:	24 2b       	or	r18, r20
- 27a:	90 96       	adiw	r26, 0x20	; 32
- 27c:	2c 93       	st	X, r18
- 27e:	a4 85       	ldd	r26, Z+12	; 0x0c
- 280:	b0 e0       	ldi	r27, 0x00	; 0
- 282:	90 96       	adiw	r26, 0x20	; 32
- 284:	4c 91       	ld	r20, X
- 286:	90 97       	sbiw	r26, 0x20	; 32
- 288:	9c 01       	movw	r18, r24
- 28a:	06 84       	ldd	r0, Z+14	; 0x0e
- 28c:	02 c0       	rjmp	.+4      	; 0x292 <_ZN6CH_LCD4InitEv+0x1c0>
- 28e:	22 0f       	add	r18, r18
- 290:	33 1f       	adc	r19, r19
- 292:	0a 94       	dec	r0
- 294:	e2 f7       	brpl	.-8      	; 0x28e <_ZN6CH_LCD4InitEv+0x1bc>
- 296:	24 2b       	or	r18, r20
- 298:	90 96       	adiw	r26, 0x20	; 32
- 29a:	2c 93       	st	X, r18
- 29c:	a6 81       	ldd	r26, Z+6	; 0x06
- 29e:	b0 e0       	ldi	r27, 0x00	; 0
+ 278:	24 2f       	mov	r18, r20
+ 27a:	20 95       	com	r18
+ 27c:	23 23       	and	r18, r19
+ 27e:	90 96       	adiw	r26, 0x20	; 32
+ 280:	2c 93       	st	X, r18
+	
+	//_SFR_IO8(RW_PORT) |=   1<<RW_Bit ;
+	_SFR_IO8(RW_PORT) &= ~(1<<RW_Bit);
+ 282:	a3 81       	ldd	r26, Z+3	; 0x03
+ 284:	b0 e0       	ldi	r27, 0x00	; 0
+ 286:	90 96       	adiw	r26, 0x20	; 32
+ 288:	3c 91       	ld	r19, X
+ 28a:	90 97       	sbiw	r26, 0x20	; 32
+ 28c:	ac 01       	movw	r20, r24
+ 28e:	05 80       	ldd	r0, Z+5	; 0x05
+ 290:	02 c0       	rjmp	.+4      	; 0x296 <_ZN6CH_LCD4InitEv+0x1c4>
+ 292:	44 0f       	add	r20, r20
+ 294:	55 1f       	adc	r21, r21
+ 296:	0a 94       	dec	r0
+ 298:	e2 f7       	brpl	.-8      	; 0x292 <_ZN6CH_LCD4InitEv+0x1c0>
+ 29a:	24 2f       	mov	r18, r20
+ 29c:	20 95       	com	r18
+ 29e:	23 23       	and	r18, r19
  2a0:	90 96       	adiw	r26, 0x20	; 32
- 2a2:	4c 91       	ld	r20, X
- 2a4:	90 97       	sbiw	r26, 0x20	; 32
- 2a6:	9c 01       	movw	r18, r24
- 2a8:	00 84       	ldd	r0, Z+8	; 0x08
- 2aa:	02 c0       	rjmp	.+4      	; 0x2b0 <_ZN6CH_LCD4InitEv+0x1de>
- 2ac:	22 0f       	add	r18, r18
- 2ae:	33 1f       	adc	r19, r19
- 2b0:	0a 94       	dec	r0
- 2b2:	e2 f7       	brpl	.-8      	; 0x2ac <_ZN6CH_LCD4InitEv+0x1da>
- 2b4:	24 2b       	or	r18, r20
- 2b6:	90 96       	adiw	r26, 0x20	; 32
- 2b8:	2c 93       	st	X, r18
- 2ba:	a7 85       	ldd	r26, Z+15	; 0x0f
- 2bc:	b0 e0       	ldi	r27, 0x00	; 0
- 2be:	90 96       	adiw	r26, 0x20	; 32
- 2c0:	3c 91       	ld	r19, X
- 2c2:	90 97       	sbiw	r26, 0x20	; 32
- 2c4:	ac 01       	movw	r20, r24
- 2c6:	01 88       	ldd	r0, Z+17	; 0x11
- 2c8:	02 c0       	rjmp	.+4      	; 0x2ce <_ZN6CH_LCD4InitEv+0x1fc>
- 2ca:	44 0f       	add	r20, r20
- 2cc:	55 1f       	adc	r21, r21
- 2ce:	0a 94       	dec	r0
- 2d0:	e2 f7       	brpl	.-8      	; 0x2ca <_ZN6CH_LCD4InitEv+0x1f8>
- 2d2:	24 2f       	mov	r18, r20
- 2d4:	20 95       	com	r18
- 2d6:	23 23       	and	r18, r19
- 2d8:	90 96       	adiw	r26, 0x20	; 32
- 2da:	2c 93       	st	X, r18
- 2dc:	a2 89       	ldd	r26, Z+18	; 0x12
- 2de:	b0 e0       	ldi	r27, 0x00	; 0
- 2e0:	90 96       	adiw	r26, 0x20	; 32
- 2e2:	3c 91       	ld	r19, X
- 2e4:	90 97       	sbiw	r26, 0x20	; 32
- 2e6:	ac 01       	movw	r20, r24
- 2e8:	04 88       	ldd	r0, Z+20	; 0x14
- 2ea:	02 c0       	rjmp	.+4      	; 0x2f0 <_ZN6CH_LCD4InitEv+0x21e>
- 2ec:	44 0f       	add	r20, r20
- 2ee:	55 1f       	adc	r21, r21
- 2f0:	0a 94       	dec	r0
- 2f2:	e2 f7       	brpl	.-8      	; 0x2ec <_ZN6CH_LCD4InitEv+0x21a>
- 2f4:	24 2f       	mov	r18, r20
- 2f6:	20 95       	com	r18
- 2f8:	23 23       	and	r18, r19
- 2fa:	90 96       	adiw	r26, 0x20	; 32
- 2fc:	2c 93       	st	X, r18
- 2fe:	a0 81       	ld	r26, Z
- 300:	b0 e0       	ldi	r27, 0x00	; 0
+ 2a2:	2c 93       	st	X, r18
+	
+	//_SFR_IO8(D7_PORT) |=   1<<D7_Bit ;
+	_SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);
+ 2a4:	a2 89       	ldd	r26, Z+18	; 0x12
+ 2a6:	b0 e0       	ldi	r27, 0x00	; 0
+ 2a8:	90 96       	adiw	r26, 0x20	; 32
+ 2aa:	3c 91       	ld	r19, X
+ 2ac:	90 97       	sbiw	r26, 0x20	; 32
+ 2ae:	ac 01       	movw	r20, r24
+ 2b0:	04 88       	ldd	r0, Z+20	; 0x14
+ 2b2:	02 c0       	rjmp	.+4      	; 0x2b8 <_ZN6CH_LCD4InitEv+0x1e6>
+ 2b4:	44 0f       	add	r20, r20
+ 2b6:	55 1f       	adc	r21, r21
+ 2b8:	0a 94       	dec	r0
+ 2ba:	e2 f7       	brpl	.-8      	; 0x2b4 <_ZN6CH_LCD4InitEv+0x1e2>
+ 2bc:	24 2f       	mov	r18, r20
+ 2be:	20 95       	com	r18
+ 2c0:	23 23       	and	r18, r19
+ 2c2:	90 96       	adiw	r26, 0x20	; 32
+ 2c4:	2c 93       	st	X, r18
+
+	//_SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
+	_SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
+ 2c6:	a7 85       	ldd	r26, Z+15	; 0x0f
+ 2c8:	b0 e0       	ldi	r27, 0x00	; 0
+ 2ca:	90 96       	adiw	r26, 0x20	; 32
+ 2cc:	3c 91       	ld	r19, X
+ 2ce:	90 97       	sbiw	r26, 0x20	; 32
+ 2d0:	ac 01       	movw	r20, r24
+ 2d2:	01 88       	ldd	r0, Z+17	; 0x11
+ 2d4:	02 c0       	rjmp	.+4      	; 0x2da <_ZN6CH_LCD4InitEv+0x208>
+ 2d6:	44 0f       	add	r20, r20
+ 2d8:	55 1f       	adc	r21, r21
+ 2da:	0a 94       	dec	r0
+ 2dc:	e2 f7       	brpl	.-8      	; 0x2d6 <_ZN6CH_LCD4InitEv+0x204>
+ 2de:	24 2f       	mov	r18, r20
+ 2e0:	20 95       	com	r18
+ 2e2:	23 23       	and	r18, r19
+ 2e4:	90 96       	adiw	r26, 0x20	; 32
+ 2e6:	2c 93       	st	X, r18
+	
+	_SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
+ 2e8:	a4 85       	ldd	r26, Z+12	; 0x0c
+ 2ea:	b0 e0       	ldi	r27, 0x00	; 0
+ 2ec:	90 96       	adiw	r26, 0x20	; 32
+ 2ee:	4c 91       	ld	r20, X
+ 2f0:	90 97       	sbiw	r26, 0x20	; 32
+ 2f2:	9c 01       	movw	r18, r24
+ 2f4:	06 84       	ldd	r0, Z+14	; 0x0e
+ 2f6:	02 c0       	rjmp	.+4      	; 0x2fc <_ZN6CH_LCD4InitEv+0x22a>
+ 2f8:	22 0f       	add	r18, r18
+ 2fa:	33 1f       	adc	r19, r19
+ 2fc:	0a 94       	dec	r0
+ 2fe:	e2 f7       	brpl	.-8      	; 0x2f8 <_ZN6CH_LCD4InitEv+0x226>
+ 300:	24 2b       	or	r18, r20
  302:	90 96       	adiw	r26, 0x20	; 32
- 304:	3c 91       	ld	r19, X
- 306:	90 97       	sbiw	r26, 0x20	; 32
- 308:	ac 01       	movw	r20, r24
- 30a:	02 80       	ldd	r0, Z+2	; 0x02
- 30c:	02 c0       	rjmp	.+4      	; 0x312 <_ZN6CH_LCD4InitEv+0x240>
- 30e:	44 0f       	add	r20, r20
- 310:	55 1f       	adc	r21, r21
- 312:	0a 94       	dec	r0
- 314:	e2 f7       	brpl	.-8      	; 0x30e <_ZN6CH_LCD4InitEv+0x23c>
- 316:	24 2f       	mov	r18, r20
- 318:	20 95       	com	r18
- 31a:	23 23       	and	r18, r19
- 31c:	90 96       	adiw	r26, 0x20	; 32
- 31e:	2c 93       	st	X, r18
- 320:	a3 81       	ldd	r26, Z+3	; 0x03
- 322:	b0 e0       	ldi	r27, 0x00	; 0
+ 304:	2c 93       	st	X, r18
+	//_SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
+	
+	//_SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
+	_SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
+ 306:	a1 85       	ldd	r26, Z+9	; 0x09
+ 308:	b0 e0       	ldi	r27, 0x00	; 0
+ 30a:	90 96       	adiw	r26, 0x20	; 32
+ 30c:	3c 91       	ld	r19, X
+ 30e:	90 97       	sbiw	r26, 0x20	; 32
+ 310:	ac 01       	movw	r20, r24
+ 312:	03 84       	ldd	r0, Z+11	; 0x0b
+ 314:	02 c0       	rjmp	.+4      	; 0x31a <_ZN6CH_LCD4InitEv+0x248>
+ 316:	44 0f       	add	r20, r20
+ 318:	55 1f       	adc	r21, r21
+ 31a:	0a 94       	dec	r0
+ 31c:	e2 f7       	brpl	.-8      	; 0x316 <_ZN6CH_LCD4InitEv+0x244>
+ 31e:	24 2f       	mov	r18, r20
+ 320:	20 95       	com	r18
+ 322:	23 23       	and	r18, r19
  324:	90 96       	adiw	r26, 0x20	; 32
- 326:	3c 91       	ld	r19, X
- 328:	90 97       	sbiw	r26, 0x20	; 32
- 32a:	ac 01       	movw	r20, r24
- 32c:	05 80       	ldd	r0, Z+5	; 0x05
- 32e:	02 c0       	rjmp	.+4      	; 0x334 <_ZN6CH_LCD4InitEv+0x262>
- 330:	44 0f       	add	r20, r20
- 332:	55 1f       	adc	r21, r21
- 334:	0a 94       	dec	r0
- 336:	e2 f7       	brpl	.-8      	; 0x330 <_ZN6CH_LCD4InitEv+0x25e>
- 338:	24 2f       	mov	r18, r20
- 33a:	20 95       	com	r18
- 33c:	23 23       	and	r18, r19
- 33e:	90 96       	adiw	r26, 0x20	; 32
- 340:	2c 93       	st	X, r18
- 342:	af ec       	ldi	r26, 0xCF	; 207
- 344:	b7 e0       	ldi	r27, 0x07	; 7
- 346:	11 97       	sbiw	r26, 0x01	; 1
- 348:	f1 f7       	brne	.-4      	; 0x346 <_ZN6CH_LCD4InitEv+0x274>
- 34a:	00 c0       	rjmp	.+0      	; 0x34c <_ZN6CH_LCD4InitEv+0x27a>
- 34c:	00 00       	nop
- 34e:	a6 81       	ldd	r26, Z+6	; 0x06
- 350:	b0 e0       	ldi	r27, 0x00	; 0
- 352:	90 96       	adiw	r26, 0x20	; 32
- 354:	3c 91       	ld	r19, X
- 356:	90 97       	sbiw	r26, 0x20	; 32
- 358:	ac 01       	movw	r20, r24
- 35a:	00 84       	ldd	r0, Z+8	; 0x08
- 35c:	02 c0       	rjmp	.+4      	; 0x362 <_ZN6CH_LCD4InitEv+0x290>
- 35e:	44 0f       	add	r20, r20
- 360:	55 1f       	adc	r21, r21
- 362:	0a 94       	dec	r0
- 364:	e2 f7       	brpl	.-8      	; 0x35e <_ZN6CH_LCD4InitEv+0x28c>
- 366:	24 2f       	mov	r18, r20
- 368:	20 95       	com	r18
- 36a:	23 23       	and	r18, r19
+ 326:	2c 93       	st	X, r18
+
+	//SENDING
+	_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
+ 328:	a6 81       	ldd	r26, Z+6	; 0x06
+ 32a:	b0 e0       	ldi	r27, 0x00	; 0
+ 32c:	90 96       	adiw	r26, 0x20	; 32
+ 32e:	4c 91       	ld	r20, X
+ 330:	90 97       	sbiw	r26, 0x20	; 32
+ 332:	9c 01       	movw	r18, r24
+ 334:	00 84       	ldd	r0, Z+8	; 0x08
+ 336:	02 c0       	rjmp	.+4      	; 0x33c <_ZN6CH_LCD4InitEv+0x26a>
+ 338:	22 0f       	add	r18, r18
+ 33a:	33 1f       	adc	r19, r19
+ 33c:	0a 94       	dec	r0
+ 33e:	e2 f7       	brpl	.-8      	; 0x338 <_ZN6CH_LCD4InitEv+0x266>
+ 340:	24 2b       	or	r18, r20
+ 342:	90 96       	adiw	r26, 0x20	; 32
+ 344:	2c 93       	st	X, r18
+ 346:	af ec       	ldi	r26, 0xCF	; 207
+ 348:	b7 e0       	ldi	r27, 0x07	; 7
+ 34a:	11 97       	sbiw	r26, 0x01	; 1
+ 34c:	f1 f7       	brne	.-4      	; 0x34a <_ZN6CH_LCD4InitEv+0x278>
+ 34e:	00 c0       	rjmp	.+0      	; 0x350 <_ZN6CH_LCD4InitEv+0x27e>
+ 350:	00 00       	nop
+	_delay_ms(E_DELAY);
+	_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
+ 352:	a6 81       	ldd	r26, Z+6	; 0x06
+ 354:	b0 e0       	ldi	r27, 0x00	; 0
+ 356:	90 96       	adiw	r26, 0x20	; 32
+ 358:	2c 91       	ld	r18, X
+ 35a:	90 97       	sbiw	r26, 0x20	; 32
+ 35c:	00 84       	ldd	r0, Z+8	; 0x08
+ 35e:	02 c0       	rjmp	.+4      	; 0x364 <_ZN6CH_LCD4InitEv+0x292>
+ 360:	88 0f       	add	r24, r24
+ 362:	99 1f       	adc	r25, r25
+ 364:	0a 94       	dec	r0
+ 366:	e2 f7       	brpl	.-8      	; 0x360 <_ZN6CH_LCD4InitEv+0x28e>
+ 368:	80 95       	com	r24
+ 36a:	82 23       	and	r24, r18
  36c:	90 96       	adiw	r26, 0x20	; 32
- 36e:	2c 93       	st	X, r18
- 370:	af ec       	ldi	r26, 0xCF	; 207
- 372:	b7 e0       	ldi	r27, 0x07	; 7
- 374:	11 97       	sbiw	r26, 0x01	; 1
+ 36e:	8c 93       	st	X, r24
+ 370:	8f ec       	ldi	r24, 0xCF	; 207
+ 372:	97 e0       	ldi	r25, 0x07	; 7
+ 374:	01 97       	sbiw	r24, 0x01	; 1
  376:	f1 f7       	brne	.-4      	; 0x374 <_ZN6CH_LCD4InitEv+0x2a2>
  378:	00 c0       	rjmp	.+0      	; 0x37a <_ZN6CH_LCD4InitEv+0x2a8>
  37a:	00 00       	nop
- 37c:	a1 85       	ldd	r26, Z+9	; 0x09
- 37e:	b0 e0       	ldi	r27, 0x00	; 0
- 380:	90 96       	adiw	r26, 0x20	; 32
- 382:	4c 91       	ld	r20, X
- 384:	90 97       	sbiw	r26, 0x20	; 32
- 386:	9c 01       	movw	r18, r24
- 388:	03 84       	ldd	r0, Z+11	; 0x0b
- 38a:	02 c0       	rjmp	.+4      	; 0x390 <_ZN6CH_LCD4InitEv+0x2be>
- 38c:	22 0f       	add	r18, r18
- 38e:	33 1f       	adc	r19, r19
- 390:	0a 94       	dec	r0
- 392:	e2 f7       	brpl	.-8      	; 0x38c <_ZN6CH_LCD4InitEv+0x2ba>
- 394:	24 2b       	or	r18, r20
- 396:	90 96       	adiw	r26, 0x20	; 32
- 398:	2c 93       	st	X, r18
- 39a:	a4 85       	ldd	r26, Z+12	; 0x0c
- 39c:	b0 e0       	ldi	r27, 0x00	; 0
- 39e:	90 96       	adiw	r26, 0x20	; 32
- 3a0:	4c 91       	ld	r20, X
- 3a2:	90 97       	sbiw	r26, 0x20	; 32
- 3a4:	9c 01       	movw	r18, r24
- 3a6:	06 84       	ldd	r0, Z+14	; 0x0e
- 3a8:	02 c0       	rjmp	.+4      	; 0x3ae <_ZN6CH_LCD4InitEv+0x2dc>
- 3aa:	22 0f       	add	r18, r18
- 3ac:	33 1f       	adc	r19, r19
- 3ae:	0a 94       	dec	r0
- 3b0:	e2 f7       	brpl	.-8      	; 0x3aa <_ZN6CH_LCD4InitEv+0x2d8>
- 3b2:	24 2b       	or	r18, r20
- 3b4:	90 96       	adiw	r26, 0x20	; 32
- 3b6:	2c 93       	st	X, r18
- 3b8:	a7 85       	ldd	r26, Z+15	; 0x0f
- 3ba:	b0 e0       	ldi	r27, 0x00	; 0
- 3bc:	90 96       	adiw	r26, 0x20	; 32
- 3be:	3c 91       	ld	r19, X
- 3c0:	90 97       	sbiw	r26, 0x20	; 32
- 3c2:	ac 01       	movw	r20, r24
- 3c4:	01 88       	ldd	r0, Z+17	; 0x11
- 3c6:	02 c0       	rjmp	.+4      	; 0x3cc <_ZN6CH_LCD4InitEv+0x2fa>
- 3c8:	44 0f       	add	r20, r20
- 3ca:	55 1f       	adc	r21, r21
- 3cc:	0a 94       	dec	r0
- 3ce:	e2 f7       	brpl	.-8      	; 0x3c8 <_ZN6CH_LCD4InitEv+0x2f6>
- 3d0:	24 2f       	mov	r18, r20
- 3d2:	20 95       	com	r18
- 3d4:	23 23       	and	r18, r19
- 3d6:	90 96       	adiw	r26, 0x20	; 32
- 3d8:	2c 93       	st	X, r18
- 3da:	a2 89       	ldd	r26, Z+18	; 0x12
- 3dc:	b0 e0       	ldi	r27, 0x00	; 0
- 3de:	90 96       	adiw	r26, 0x20	; 32
- 3e0:	3c 91       	ld	r19, X
- 3e2:	90 97       	sbiw	r26, 0x20	; 32
- 3e4:	ac 01       	movw	r20, r24
- 3e6:	04 88       	ldd	r0, Z+20	; 0x14
- 3e8:	02 c0       	rjmp	.+4      	; 0x3ee <_ZN6CH_LCD4InitEv+0x31c>
- 3ea:	44 0f       	add	r20, r20
- 3ec:	55 1f       	adc	r21, r21
- 3ee:	0a 94       	dec	r0
- 3f0:	e2 f7       	brpl	.-8      	; 0x3ea <_ZN6CH_LCD4InitEv+0x318>
- 3f2:	24 2f       	mov	r18, r20
- 3f4:	20 95       	com	r18
- 3f6:	23 23       	and	r18, r19
- 3f8:	90 96       	adiw	r26, 0x20	; 32
- 3fa:	2c 93       	st	X, r18
- 3fc:	a6 81       	ldd	r26, Z+6	; 0x06
- 3fe:	b0 e0       	ldi	r27, 0x00	; 0
- 400:	90 96       	adiw	r26, 0x20	; 32
- 402:	4c 91       	ld	r20, X
- 404:	90 97       	sbiw	r26, 0x20	; 32
- 406:	9c 01       	movw	r18, r24
- 408:	00 84       	ldd	r0, Z+8	; 0x08
- 40a:	02 c0       	rjmp	.+4      	; 0x410 <__LOCK_REGION_LENGTH__+0x10>
- 40c:	22 0f       	add	r18, r18
- 40e:	33 1f       	adc	r19, r19
- 410:	0a 94       	dec	r0
- 412:	e2 f7       	brpl	.-8      	; 0x40c <__LOCK_REGION_LENGTH__+0xc>
- 414:	24 2b       	or	r18, r20
- 416:	90 96       	adiw	r26, 0x20	; 32
- 418:	2c 93       	st	X, r18
- 41a:	a0 81       	ld	r26, Z
- 41c:	b0 e0       	ldi	r27, 0x00	; 0
- 41e:	90 96       	adiw	r26, 0x20	; 32
- 420:	3c 91       	ld	r19, X
- 422:	90 97       	sbiw	r26, 0x20	; 32
- 424:	ac 01       	movw	r20, r24
- 426:	02 80       	ldd	r0, Z+2	; 0x02
- 428:	02 c0       	rjmp	.+4      	; 0x42e <__LOCK_REGION_LENGTH__+0x2e>
- 42a:	44 0f       	add	r20, r20
- 42c:	55 1f       	adc	r21, r21
- 42e:	0a 94       	dec	r0
- 430:	e2 f7       	brpl	.-8      	; 0x42a <__LOCK_REGION_LENGTH__+0x2a>
- 432:	24 2f       	mov	r18, r20
- 434:	20 95       	com	r18
- 436:	23 23       	and	r18, r19
- 438:	90 96       	adiw	r26, 0x20	; 32
- 43a:	2c 93       	st	X, r18
- 43c:	a3 81       	ldd	r26, Z+3	; 0x03
- 43e:	b0 e0       	ldi	r27, 0x00	; 0
+ 37c:	08 95       	ret
+
+0000037e <_ZN6CH_LCD11SendCommandEhhh>:
+	//SendCommand(12);
+	//Clr();
+}
+
+void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Sends Command to LCD
+{	
+ 37e:	8f 92       	push	r8
+ 380:	9f 92       	push	r9
+ 382:	af 92       	push	r10
+ 384:	bf 92       	push	r11
+ 386:	cf 92       	push	r12
+ 388:	df 92       	push	r13
+ 38a:	ef 92       	push	r14
+ 38c:	ff 92       	push	r15
+ 38e:	0f 93       	push	r16
+ 390:	1f 93       	push	r17
+ 392:	cf 93       	push	r28
+ 394:	df 93       	push	r29
+ 396:	fc 01       	movw	r30, r24
+	uint8_t lcd_D0 = command >> 0;
+	uint8_t lcd_D1 = command >> 1;
+ 398:	82 2f       	mov	r24, r18
+ 39a:	90 e0       	ldi	r25, 0x00	; 0
+ 39c:	4c 01       	movw	r8, r24
+ 39e:	95 94       	asr	r9
+ 3a0:	87 94       	ror	r8
+	uint8_t lcd_D2 = command >> 2;
+ 3a2:	ec 01       	movw	r28, r24
+ 3a4:	d5 95       	asr	r29
+ 3a6:	c7 95       	ror	r28
+ 3a8:	d5 95       	asr	r29
+ 3aa:	c7 95       	ror	r28
+	uint8_t lcd_D3 = command >> 3;
+ 3ac:	8c 01       	movw	r16, r24
+ 3ae:	15 95       	asr	r17
+ 3b0:	07 95       	ror	r16
+ 3b2:	15 95       	asr	r17
+ 3b4:	07 95       	ror	r16
+ 3b6:	15 95       	asr	r17
+ 3b8:	07 95       	ror	r16
+	uint8_t lcd_D4 = command >> 4;
+ 3ba:	7c 01       	movw	r14, r24
+ 3bc:	f5 94       	asr	r15
+ 3be:	e7 94       	ror	r14
+ 3c0:	f5 94       	asr	r15
+ 3c2:	e7 94       	ror	r14
+ 3c4:	f5 94       	asr	r15
+ 3c6:	e7 94       	ror	r14
+ 3c8:	f5 94       	asr	r15
+ 3ca:	e7 94       	ror	r14
+	uint8_t lcd_D5 = command >> 5;
+ 3cc:	6c 01       	movw	r12, r24
+ 3ce:	d5 94       	asr	r13
+ 3d0:	c7 94       	ror	r12
+ 3d2:	d5 94       	asr	r13
+ 3d4:	c7 94       	ror	r12
+ 3d6:	d5 94       	asr	r13
+ 3d8:	c7 94       	ror	r12
+ 3da:	d5 94       	asr	r13
+ 3dc:	c7 94       	ror	r12
+ 3de:	d5 94       	asr	r13
+ 3e0:	c7 94       	ror	r12
+	uint8_t lcd_D6 = command >> 6;
+ 3e2:	5c 01       	movw	r10, r24
+ 3e4:	0a 2c       	mov	r0, r10
+ 3e6:	ab 2c       	mov	r10, r11
+ 3e8:	00 0c       	add	r0, r0
+ 3ea:	aa 1c       	adc	r10, r10
+ 3ec:	bb 08       	sbc	r11, r11
+ 3ee:	00 0c       	add	r0, r0
+ 3f0:	aa 1c       	adc	r10, r10
+ 3f2:	bb 1c       	adc	r11, r11
+	uint8_t lcd_D7 = command >> 7;
+ 3f4:	88 0f       	add	r24, r24
+ 3f6:	89 2f       	mov	r24, r25
+ 3f8:	88 1f       	adc	r24, r24
+ 3fa:	99 0b       	sbc	r25, r25
+	
+// FIRST MSB BITS SENDING
+	if (rs_Bit & 1) _SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
+ 3fc:	60 ff       	sbrs	r22, 0
+ 3fe:	11 c0       	rjmp	.+34     	; 0x422 <__LOCK_REGION_LENGTH__+0x22>
+ 400:	a0 81       	ld	r26, Z
+ 402:	b0 e0       	ldi	r27, 0x00	; 0
+ 404:	90 96       	adiw	r26, 0x20	; 32
+ 406:	3c 91       	ld	r19, X
+ 408:	90 97       	sbiw	r26, 0x20	; 32
+ 40a:	61 e0       	ldi	r22, 0x01	; 1
+ 40c:	70 e0       	ldi	r23, 0x00	; 0
+ 40e:	02 80       	ldd	r0, Z+2	; 0x02
+ 410:	02 c0       	rjmp	.+4      	; 0x416 <__LOCK_REGION_LENGTH__+0x16>
+ 412:	66 0f       	add	r22, r22
+ 414:	77 1f       	adc	r23, r23
+ 416:	0a 94       	dec	r0
+ 418:	e2 f7       	brpl	.-8      	; 0x412 <__LOCK_REGION_LENGTH__+0x12>
+ 41a:	63 2b       	or	r22, r19
+ 41c:	90 96       	adiw	r26, 0x20	; 32
+ 41e:	6c 93       	st	X, r22
+ 420:	11 c0       	rjmp	.+34     	; 0x444 <__LOCK_REGION_LENGTH__+0x44>
+	else			 _SFR_IO8(RS_PORT) &= ~(1<<RS_Bit);
+ 422:	a0 81       	ld	r26, Z
+ 424:	b0 e0       	ldi	r27, 0x00	; 0
+ 426:	90 96       	adiw	r26, 0x20	; 32
+ 428:	3c 91       	ld	r19, X
+ 42a:	90 97       	sbiw	r26, 0x20	; 32
+ 42c:	61 e0       	ldi	r22, 0x01	; 1
+ 42e:	70 e0       	ldi	r23, 0x00	; 0
+ 430:	02 80       	ldd	r0, Z+2	; 0x02
+ 432:	02 c0       	rjmp	.+4      	; 0x438 <__LOCK_REGION_LENGTH__+0x38>
+ 434:	66 0f       	add	r22, r22
+ 436:	77 1f       	adc	r23, r23
+ 438:	0a 94       	dec	r0
+ 43a:	e2 f7       	brpl	.-8      	; 0x434 <__LOCK_REGION_LENGTH__+0x34>
+ 43c:	60 95       	com	r22
+ 43e:	63 23       	and	r22, r19
  440:	90 96       	adiw	r26, 0x20	; 32
- 442:	3c 91       	ld	r19, X
- 444:	90 97       	sbiw	r26, 0x20	; 32
- 446:	ac 01       	movw	r20, r24
- 448:	05 80       	ldd	r0, Z+5	; 0x05
- 44a:	02 c0       	rjmp	.+4      	; 0x450 <__LOCK_REGION_LENGTH__+0x50>
- 44c:	44 0f       	add	r20, r20
- 44e:	55 1f       	adc	r21, r21
- 450:	0a 94       	dec	r0
- 452:	e2 f7       	brpl	.-8      	; 0x44c <__LOCK_REGION_LENGTH__+0x4c>
- 454:	24 2f       	mov	r18, r20
- 456:	20 95       	com	r18
- 458:	23 23       	and	r18, r19
- 45a:	90 96       	adiw	r26, 0x20	; 32
- 45c:	2c 93       	st	X, r18
- 45e:	af ec       	ldi	r26, 0xCF	; 207
- 460:	b7 e0       	ldi	r27, 0x07	; 7
- 462:	11 97       	sbiw	r26, 0x01	; 1
- 464:	f1 f7       	brne	.-4      	; 0x462 <__LOCK_REGION_LENGTH__+0x62>
- 466:	00 c0       	rjmp	.+0      	; 0x468 <__LOCK_REGION_LENGTH__+0x68>
- 468:	00 00       	nop
- 46a:	a6 81       	ldd	r26, Z+6	; 0x06
+ 442:	6c 93       	st	X, r22
+	
+	if (rw_Bit & 1) _SFR_IO8(RW_PORT) |=   1<<RW_Bit ;
+ 444:	40 ff       	sbrs	r20, 0
+ 446:	11 c0       	rjmp	.+34     	; 0x46a <__LOCK_REGION_LENGTH__+0x6a>
+ 448:	a3 81       	ldd	r26, Z+3	; 0x03
+ 44a:	b0 e0       	ldi	r27, 0x00	; 0
+ 44c:	90 96       	adiw	r26, 0x20	; 32
+ 44e:	3c 91       	ld	r19, X
+ 450:	90 97       	sbiw	r26, 0x20	; 32
+ 452:	41 e0       	ldi	r20, 0x01	; 1
+ 454:	50 e0       	ldi	r21, 0x00	; 0
+ 456:	05 80       	ldd	r0, Z+5	; 0x05
+ 458:	02 c0       	rjmp	.+4      	; 0x45e <__LOCK_REGION_LENGTH__+0x5e>
+ 45a:	44 0f       	add	r20, r20
+ 45c:	55 1f       	adc	r21, r21
+ 45e:	0a 94       	dec	r0
+ 460:	e2 f7       	brpl	.-8      	; 0x45a <__LOCK_REGION_LENGTH__+0x5a>
+ 462:	43 2b       	or	r20, r19
+ 464:	90 96       	adiw	r26, 0x20	; 32
+ 466:	4c 93       	st	X, r20
+ 468:	11 c0       	rjmp	.+34     	; 0x48c <__LOCK_REGION_LENGTH__+0x8c>
+	else			 _SFR_IO8(RW_PORT) &= ~(1<<RW_Bit);
+ 46a:	a3 81       	ldd	r26, Z+3	; 0x03
  46c:	b0 e0       	ldi	r27, 0x00	; 0
  46e:	90 96       	adiw	r26, 0x20	; 32
  470:	3c 91       	ld	r19, X
  472:	90 97       	sbiw	r26, 0x20	; 32
- 474:	ac 01       	movw	r20, r24
- 476:	00 84       	ldd	r0, Z+8	; 0x08
- 478:	02 c0       	rjmp	.+4      	; 0x47e <__LOCK_REGION_LENGTH__+0x7e>
- 47a:	44 0f       	add	r20, r20
- 47c:	55 1f       	adc	r21, r21
- 47e:	0a 94       	dec	r0
- 480:	e2 f7       	brpl	.-8      	; 0x47a <__LOCK_REGION_LENGTH__+0x7a>
- 482:	24 2f       	mov	r18, r20
- 484:	20 95       	com	r18
- 486:	23 23       	and	r18, r19
+ 474:	41 e0       	ldi	r20, 0x01	; 1
+ 476:	50 e0       	ldi	r21, 0x00	; 0
+ 478:	05 80       	ldd	r0, Z+5	; 0x05
+ 47a:	02 c0       	rjmp	.+4      	; 0x480 <__LOCK_REGION_LENGTH__+0x80>
+ 47c:	44 0f       	add	r20, r20
+ 47e:	55 1f       	adc	r21, r21
+ 480:	0a 94       	dec	r0
+ 482:	e2 f7       	brpl	.-8      	; 0x47c <__LOCK_REGION_LENGTH__+0x7c>
+ 484:	40 95       	com	r20
+ 486:	43 23       	and	r20, r19
  488:	90 96       	adiw	r26, 0x20	; 32
- 48a:	2c 93       	st	X, r18
- 48c:	af ec       	ldi	r26, 0xCF	; 207
- 48e:	b7 e0       	ldi	r27, 0x07	; 7
- 490:	11 97       	sbiw	r26, 0x01	; 1
- 492:	f1 f7       	brne	.-4      	; 0x490 <__LOCK_REGION_LENGTH__+0x90>
- 494:	00 c0       	rjmp	.+0      	; 0x496 <__LOCK_REGION_LENGTH__+0x96>
- 496:	00 00       	nop
- 498:	a1 85       	ldd	r26, Z+9	; 0x09
- 49a:	b0 e0       	ldi	r27, 0x00	; 0
- 49c:	90 96       	adiw	r26, 0x20	; 32
- 49e:	3c 91       	ld	r19, X
- 4a0:	90 97       	sbiw	r26, 0x20	; 32
- 4a2:	ac 01       	movw	r20, r24
- 4a4:	03 84       	ldd	r0, Z+11	; 0x0b
- 4a6:	02 c0       	rjmp	.+4      	; 0x4ac <__LOCK_REGION_LENGTH__+0xac>
- 4a8:	44 0f       	add	r20, r20
- 4aa:	55 1f       	adc	r21, r21
- 4ac:	0a 94       	dec	r0
- 4ae:	e2 f7       	brpl	.-8      	; 0x4a8 <__LOCK_REGION_LENGTH__+0xa8>
- 4b0:	24 2f       	mov	r18, r20
- 4b2:	20 95       	com	r18
- 4b4:	23 23       	and	r18, r19
+ 48a:	4c 93       	st	X, r20
+	
+	if (lcd_D7 & 1) _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;	
+ 48c:	80 ff       	sbrs	r24, 0
+ 48e:	11 c0       	rjmp	.+34     	; 0x4b2 <__LOCK_REGION_LENGTH__+0xb2>
+ 490:	a2 89       	ldd	r26, Z+18	; 0x12
+ 492:	b0 e0       	ldi	r27, 0x00	; 0
+ 494:	90 96       	adiw	r26, 0x20	; 32
+ 496:	3c 91       	ld	r19, X
+ 498:	90 97       	sbiw	r26, 0x20	; 32
+ 49a:	81 e0       	ldi	r24, 0x01	; 1
+ 49c:	90 e0       	ldi	r25, 0x00	; 0
+ 49e:	04 88       	ldd	r0, Z+20	; 0x14
+ 4a0:	02 c0       	rjmp	.+4      	; 0x4a6 <__LOCK_REGION_LENGTH__+0xa6>
+ 4a2:	88 0f       	add	r24, r24
+ 4a4:	99 1f       	adc	r25, r25
+ 4a6:	0a 94       	dec	r0
+ 4a8:	e2 f7       	brpl	.-8      	; 0x4a2 <__LOCK_REGION_LENGTH__+0xa2>
+ 4aa:	83 2b       	or	r24, r19
+ 4ac:	90 96       	adiw	r26, 0x20	; 32
+ 4ae:	8c 93       	st	X, r24
+ 4b0:	11 c0       	rjmp	.+34     	; 0x4d4 <__LOCK_REGION_LENGTH__+0xd4>
+	else			 _SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);	
+ 4b2:	a2 89       	ldd	r26, Z+18	; 0x12
+ 4b4:	b0 e0       	ldi	r27, 0x00	; 0
  4b6:	90 96       	adiw	r26, 0x20	; 32
- 4b8:	2c 93       	st	X, r18
- 4ba:	a4 85       	ldd	r26, Z+12	; 0x0c
- 4bc:	b0 e0       	ldi	r27, 0x00	; 0
- 4be:	90 96       	adiw	r26, 0x20	; 32
- 4c0:	4c 91       	ld	r20, X
- 4c2:	90 97       	sbiw	r26, 0x20	; 32
- 4c4:	9c 01       	movw	r18, r24
- 4c6:	06 84       	ldd	r0, Z+14	; 0x0e
- 4c8:	02 c0       	rjmp	.+4      	; 0x4ce <__LOCK_REGION_LENGTH__+0xce>
- 4ca:	22 0f       	add	r18, r18
- 4cc:	33 1f       	adc	r19, r19
- 4ce:	0a 94       	dec	r0
- 4d0:	e2 f7       	brpl	.-8      	; 0x4ca <__LOCK_REGION_LENGTH__+0xca>
- 4d2:	24 2b       	or	r18, r20
- 4d4:	90 96       	adiw	r26, 0x20	; 32
- 4d6:	2c 93       	st	X, r18
+ 4b8:	3c 91       	ld	r19, X
+ 4ba:	90 97       	sbiw	r26, 0x20	; 32
+ 4bc:	81 e0       	ldi	r24, 0x01	; 1
+ 4be:	90 e0       	ldi	r25, 0x00	; 0
+ 4c0:	04 88       	ldd	r0, Z+20	; 0x14
+ 4c2:	02 c0       	rjmp	.+4      	; 0x4c8 <__LOCK_REGION_LENGTH__+0xc8>
+ 4c4:	88 0f       	add	r24, r24
+ 4c6:	99 1f       	adc	r25, r25
+ 4c8:	0a 94       	dec	r0
+ 4ca:	e2 f7       	brpl	.-8      	; 0x4c4 <__LOCK_REGION_LENGTH__+0xc4>
+ 4cc:	80 95       	com	r24
+ 4ce:	83 23       	and	r24, r19
+ 4d0:	90 96       	adiw	r26, 0x20	; 32
+ 4d2:	8c 93       	st	X, r24
+
+	if (lcd_D6 & 1) _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
+ 4d4:	a0 fe       	sbrs	r10, 0
+ 4d6:	11 c0       	rjmp	.+34     	; 0x4fa <__LOCK_REGION_LENGTH__+0xfa>
  4d8:	a7 85       	ldd	r26, Z+15	; 0x0f
  4da:	b0 e0       	ldi	r27, 0x00	; 0
  4dc:	90 96       	adiw	r26, 0x20	; 32
  4de:	3c 91       	ld	r19, X
  4e0:	90 97       	sbiw	r26, 0x20	; 32
- 4e2:	ac 01       	movw	r20, r24
- 4e4:	01 88       	ldd	r0, Z+17	; 0x11
- 4e6:	02 c0       	rjmp	.+4      	; 0x4ec <__LOCK_REGION_LENGTH__+0xec>
- 4e8:	44 0f       	add	r20, r20
- 4ea:	55 1f       	adc	r21, r21
- 4ec:	0a 94       	dec	r0
- 4ee:	e2 f7       	brpl	.-8      	; 0x4e8 <__LOCK_REGION_LENGTH__+0xe8>
- 4f0:	24 2f       	mov	r18, r20
- 4f2:	20 95       	com	r18
- 4f4:	23 23       	and	r18, r19
- 4f6:	90 96       	adiw	r26, 0x20	; 32
- 4f8:	2c 93       	st	X, r18
- 4fa:	a2 89       	ldd	r26, Z+18	; 0x12
+ 4e2:	81 e0       	ldi	r24, 0x01	; 1
+ 4e4:	90 e0       	ldi	r25, 0x00	; 0
+ 4e6:	01 88       	ldd	r0, Z+17	; 0x11
+ 4e8:	02 c0       	rjmp	.+4      	; 0x4ee <__LOCK_REGION_LENGTH__+0xee>
+ 4ea:	88 0f       	add	r24, r24
+ 4ec:	99 1f       	adc	r25, r25
+ 4ee:	0a 94       	dec	r0
+ 4f0:	e2 f7       	brpl	.-8      	; 0x4ea <__LOCK_REGION_LENGTH__+0xea>
+ 4f2:	83 2b       	or	r24, r19
+ 4f4:	90 96       	adiw	r26, 0x20	; 32
+ 4f6:	8c 93       	st	X, r24
+ 4f8:	11 c0       	rjmp	.+34     	; 0x51c <__LOCK_REGION_LENGTH__+0x11c>
+	else			 _SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
+ 4fa:	a7 85       	ldd	r26, Z+15	; 0x0f
  4fc:	b0 e0       	ldi	r27, 0x00	; 0
  4fe:	90 96       	adiw	r26, 0x20	; 32
  500:	3c 91       	ld	r19, X
  502:	90 97       	sbiw	r26, 0x20	; 32
- 504:	ac 01       	movw	r20, r24
- 506:	04 88       	ldd	r0, Z+20	; 0x14
- 508:	02 c0       	rjmp	.+4      	; 0x50e <__LOCK_REGION_LENGTH__+0x10e>
- 50a:	44 0f       	add	r20, r20
- 50c:	55 1f       	adc	r21, r21
- 50e:	0a 94       	dec	r0
- 510:	e2 f7       	brpl	.-8      	; 0x50a <__LOCK_REGION_LENGTH__+0x10a>
- 512:	24 2f       	mov	r18, r20
- 514:	20 95       	com	r18
- 516:	23 23       	and	r18, r19
+ 504:	81 e0       	ldi	r24, 0x01	; 1
+ 506:	90 e0       	ldi	r25, 0x00	; 0
+ 508:	01 88       	ldd	r0, Z+17	; 0x11
+ 50a:	02 c0       	rjmp	.+4      	; 0x510 <__LOCK_REGION_LENGTH__+0x110>
+ 50c:	88 0f       	add	r24, r24
+ 50e:	99 1f       	adc	r25, r25
+ 510:	0a 94       	dec	r0
+ 512:	e2 f7       	brpl	.-8      	; 0x50c <__LOCK_REGION_LENGTH__+0x10c>
+ 514:	80 95       	com	r24
+ 516:	83 23       	and	r24, r19
  518:	90 96       	adiw	r26, 0x20	; 32
- 51a:	2c 93       	st	X, r18
- 51c:	a6 81       	ldd	r26, Z+6	; 0x06
- 51e:	b0 e0       	ldi	r27, 0x00	; 0
- 520:	90 96       	adiw	r26, 0x20	; 32
- 522:	4c 91       	ld	r20, X
- 524:	90 97       	sbiw	r26, 0x20	; 32
- 526:	9c 01       	movw	r18, r24
- 528:	00 84       	ldd	r0, Z+8	; 0x08
- 52a:	02 c0       	rjmp	.+4      	; 0x530 <__LOCK_REGION_LENGTH__+0x130>
- 52c:	22 0f       	add	r18, r18
- 52e:	33 1f       	adc	r19, r19
- 530:	0a 94       	dec	r0
- 532:	e2 f7       	brpl	.-8      	; 0x52c <__LOCK_REGION_LENGTH__+0x12c>
- 534:	24 2b       	or	r18, r20
- 536:	90 96       	adiw	r26, 0x20	; 32
- 538:	2c 93       	st	X, r18
- 53a:	a0 81       	ld	r26, Z
- 53c:	b0 e0       	ldi	r27, 0x00	; 0
- 53e:	90 96       	adiw	r26, 0x20	; 32
- 540:	3c 91       	ld	r19, X
- 542:	90 97       	sbiw	r26, 0x20	; 32
- 544:	ac 01       	movw	r20, r24
- 546:	02 80       	ldd	r0, Z+2	; 0x02
- 548:	02 c0       	rjmp	.+4      	; 0x54e <__LOCK_REGION_LENGTH__+0x14e>
- 54a:	44 0f       	add	r20, r20
- 54c:	55 1f       	adc	r21, r21
- 54e:	0a 94       	dec	r0
- 550:	e2 f7       	brpl	.-8      	; 0x54a <__LOCK_REGION_LENGTH__+0x14a>
- 552:	24 2f       	mov	r18, r20
- 554:	20 95       	com	r18
- 556:	23 23       	and	r18, r19
- 558:	90 96       	adiw	r26, 0x20	; 32
- 55a:	2c 93       	st	X, r18
- 55c:	a3 81       	ldd	r26, Z+3	; 0x03
- 55e:	b0 e0       	ldi	r27, 0x00	; 0
+ 51a:	8c 93       	st	X, r24
+	
+	if (lcd_D5 & 1) _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
+ 51c:	c0 fe       	sbrs	r12, 0
+ 51e:	11 c0       	rjmp	.+34     	; 0x542 <__LOCK_REGION_LENGTH__+0x142>
+ 520:	a4 85       	ldd	r26, Z+12	; 0x0c
+ 522:	b0 e0       	ldi	r27, 0x00	; 0
+ 524:	90 96       	adiw	r26, 0x20	; 32
+ 526:	3c 91       	ld	r19, X
+ 528:	90 97       	sbiw	r26, 0x20	; 32
+ 52a:	81 e0       	ldi	r24, 0x01	; 1
+ 52c:	90 e0       	ldi	r25, 0x00	; 0
+ 52e:	06 84       	ldd	r0, Z+14	; 0x0e
+ 530:	02 c0       	rjmp	.+4      	; 0x536 <__LOCK_REGION_LENGTH__+0x136>
+ 532:	88 0f       	add	r24, r24
+ 534:	99 1f       	adc	r25, r25
+ 536:	0a 94       	dec	r0
+ 538:	e2 f7       	brpl	.-8      	; 0x532 <__LOCK_REGION_LENGTH__+0x132>
+ 53a:	83 2b       	or	r24, r19
+ 53c:	90 96       	adiw	r26, 0x20	; 32
+ 53e:	8c 93       	st	X, r24
+ 540:	11 c0       	rjmp	.+34     	; 0x564 <__LOCK_REGION_LENGTH__+0x164>
+	else			 _SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
+ 542:	a4 85       	ldd	r26, Z+12	; 0x0c
+ 544:	b0 e0       	ldi	r27, 0x00	; 0
+ 546:	90 96       	adiw	r26, 0x20	; 32
+ 548:	3c 91       	ld	r19, X
+ 54a:	90 97       	sbiw	r26, 0x20	; 32
+ 54c:	81 e0       	ldi	r24, 0x01	; 1
+ 54e:	90 e0       	ldi	r25, 0x00	; 0
+ 550:	06 84       	ldd	r0, Z+14	; 0x0e
+ 552:	02 c0       	rjmp	.+4      	; 0x558 <__LOCK_REGION_LENGTH__+0x158>
+ 554:	88 0f       	add	r24, r24
+ 556:	99 1f       	adc	r25, r25
+ 558:	0a 94       	dec	r0
+ 55a:	e2 f7       	brpl	.-8      	; 0x554 <__LOCK_REGION_LENGTH__+0x154>
+ 55c:	80 95       	com	r24
+ 55e:	83 23       	and	r24, r19
  560:	90 96       	adiw	r26, 0x20	; 32
- 562:	3c 91       	ld	r19, X
- 564:	90 97       	sbiw	r26, 0x20	; 32
- 566:	ac 01       	movw	r20, r24
- 568:	05 80       	ldd	r0, Z+5	; 0x05
- 56a:	02 c0       	rjmp	.+4      	; 0x570 <__LOCK_REGION_LENGTH__+0x170>
- 56c:	44 0f       	add	r20, r20
- 56e:	55 1f       	adc	r21, r21
- 570:	0a 94       	dec	r0
- 572:	e2 f7       	brpl	.-8      	; 0x56c <__LOCK_REGION_LENGTH__+0x16c>
- 574:	24 2f       	mov	r18, r20
- 576:	20 95       	com	r18
- 578:	23 23       	and	r18, r19
- 57a:	90 96       	adiw	r26, 0x20	; 32
- 57c:	2c 93       	st	X, r18
- 57e:	af ec       	ldi	r26, 0xCF	; 207
- 580:	b7 e0       	ldi	r27, 0x07	; 7
- 582:	11 97       	sbiw	r26, 0x01	; 1
- 584:	f1 f7       	brne	.-4      	; 0x582 <__LOCK_REGION_LENGTH__+0x182>
- 586:	00 c0       	rjmp	.+0      	; 0x588 <__LOCK_REGION_LENGTH__+0x188>
- 588:	00 00       	nop
- 58a:	a6 81       	ldd	r26, Z+6	; 0x06
+ 562:	8c 93       	st	X, r24
+	
+	if (lcd_D4 & 1) _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
+ 564:	e0 fe       	sbrs	r14, 0
+ 566:	11 c0       	rjmp	.+34     	; 0x58a <__LOCK_REGION_LENGTH__+0x18a>
+ 568:	a1 85       	ldd	r26, Z+9	; 0x09
+ 56a:	b0 e0       	ldi	r27, 0x00	; 0
+ 56c:	90 96       	adiw	r26, 0x20	; 32
+ 56e:	3c 91       	ld	r19, X
+ 570:	90 97       	sbiw	r26, 0x20	; 32
+ 572:	81 e0       	ldi	r24, 0x01	; 1
+ 574:	90 e0       	ldi	r25, 0x00	; 0
+ 576:	03 84       	ldd	r0, Z+11	; 0x0b
+ 578:	02 c0       	rjmp	.+4      	; 0x57e <__LOCK_REGION_LENGTH__+0x17e>
+ 57a:	88 0f       	add	r24, r24
+ 57c:	99 1f       	adc	r25, r25
+ 57e:	0a 94       	dec	r0
+ 580:	e2 f7       	brpl	.-8      	; 0x57a <__LOCK_REGION_LENGTH__+0x17a>
+ 582:	83 2b       	or	r24, r19
+ 584:	90 96       	adiw	r26, 0x20	; 32
+ 586:	8c 93       	st	X, r24
+ 588:	11 c0       	rjmp	.+34     	; 0x5ac <__LOCK_REGION_LENGTH__+0x1ac>
+	else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
+ 58a:	a1 85       	ldd	r26, Z+9	; 0x09
  58c:	b0 e0       	ldi	r27, 0x00	; 0
  58e:	90 96       	adiw	r26, 0x20	; 32
- 590:	2c 91       	ld	r18, X
+ 590:	3c 91       	ld	r19, X
  592:	90 97       	sbiw	r26, 0x20	; 32
- 594:	00 84       	ldd	r0, Z+8	; 0x08
- 596:	02 c0       	rjmp	.+4      	; 0x59c <__LOCK_REGION_LENGTH__+0x19c>
- 598:	88 0f       	add	r24, r24
- 59a:	99 1f       	adc	r25, r25
- 59c:	0a 94       	dec	r0
- 59e:	e2 f7       	brpl	.-8      	; 0x598 <__LOCK_REGION_LENGTH__+0x198>
- 5a0:	80 95       	com	r24
- 5a2:	82 23       	and	r24, r18
- 5a4:	90 96       	adiw	r26, 0x20	; 32
- 5a6:	8c 93       	st	X, r24
- 5a8:	8f ec       	ldi	r24, 0xCF	; 207
- 5aa:	97 e0       	ldi	r25, 0x07	; 7
- 5ac:	01 97       	sbiw	r24, 0x01	; 1
- 5ae:	f1 f7       	brne	.-4      	; 0x5ac <__LOCK_REGION_LENGTH__+0x1ac>
- 5b0:	00 c0       	rjmp	.+0      	; 0x5b2 <__LOCK_REGION_LENGTH__+0x1b2>
- 5b2:	00 00       	nop
- 5b4:	08 95       	ret
+ 594:	81 e0       	ldi	r24, 0x01	; 1
+ 596:	90 e0       	ldi	r25, 0x00	; 0
+ 598:	03 84       	ldd	r0, Z+11	; 0x0b
+ 59a:	02 c0       	rjmp	.+4      	; 0x5a0 <__LOCK_REGION_LENGTH__+0x1a0>
+ 59c:	88 0f       	add	r24, r24
+ 59e:	99 1f       	adc	r25, r25
+ 5a0:	0a 94       	dec	r0
+ 5a2:	e2 f7       	brpl	.-8      	; 0x59c <__LOCK_REGION_LENGTH__+0x19c>
+ 5a4:	80 95       	com	r24
+ 5a6:	83 23       	and	r24, r19
+ 5a8:	90 96       	adiw	r26, 0x20	; 32
+ 5aa:	8c 93       	st	X, r24
 
-000005b6 <main>:
+	//SENDING
+	_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
+ 5ac:	a6 81       	ldd	r26, Z+6	; 0x06
+ 5ae:	b0 e0       	ldi	r27, 0x00	; 0
+ 5b0:	90 96       	adiw	r26, 0x20	; 32
+ 5b2:	3c 91       	ld	r19, X
+ 5b4:	90 97       	sbiw	r26, 0x20	; 32
+ 5b6:	81 e0       	ldi	r24, 0x01	; 1
+ 5b8:	90 e0       	ldi	r25, 0x00	; 0
+ 5ba:	ac 01       	movw	r20, r24
+ 5bc:	00 84       	ldd	r0, Z+8	; 0x08
+ 5be:	02 c0       	rjmp	.+4      	; 0x5c4 <__LOCK_REGION_LENGTH__+0x1c4>
+ 5c0:	44 0f       	add	r20, r20
+ 5c2:	55 1f       	adc	r21, r21
+ 5c4:	0a 94       	dec	r0
+ 5c6:	e2 f7       	brpl	.-8      	; 0x5c0 <__LOCK_REGION_LENGTH__+0x1c0>
+ 5c8:	43 2b       	or	r20, r19
+ 5ca:	90 96       	adiw	r26, 0x20	; 32
+ 5cc:	4c 93       	st	X, r20
+ 5ce:	af ec       	ldi	r26, 0xCF	; 207
+ 5d0:	b7 e0       	ldi	r27, 0x07	; 7
+ 5d2:	11 97       	sbiw	r26, 0x01	; 1
+ 5d4:	f1 f7       	brne	.-4      	; 0x5d2 <__LOCK_REGION_LENGTH__+0x1d2>
+ 5d6:	00 c0       	rjmp	.+0      	; 0x5d8 <__LOCK_REGION_LENGTH__+0x1d8>
+ 5d8:	00 00       	nop
+	_delay_ms(E_DELAY);
+	_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
+ 5da:	a6 81       	ldd	r26, Z+6	; 0x06
+ 5dc:	b0 e0       	ldi	r27, 0x00	; 0
+ 5de:	90 96       	adiw	r26, 0x20	; 32
+ 5e0:	3c 91       	ld	r19, X
+ 5e2:	90 97       	sbiw	r26, 0x20	; 32
+ 5e4:	00 84       	ldd	r0, Z+8	; 0x08
+ 5e6:	02 c0       	rjmp	.+4      	; 0x5ec <__LOCK_REGION_LENGTH__+0x1ec>
+ 5e8:	88 0f       	add	r24, r24
+ 5ea:	99 1f       	adc	r25, r25
+ 5ec:	0a 94       	dec	r0
+ 5ee:	e2 f7       	brpl	.-8      	; 0x5e8 <__LOCK_REGION_LENGTH__+0x1e8>
+ 5f0:	80 95       	com	r24
+ 5f2:	83 23       	and	r24, r19
+ 5f4:	90 96       	adiw	r26, 0x20	; 32
+ 5f6:	8c 93       	st	X, r24
+ 5f8:	8f ec       	ldi	r24, 0xCF	; 207
+ 5fa:	97 e0       	ldi	r25, 0x07	; 7
+ 5fc:	01 97       	sbiw	r24, 0x01	; 1
+ 5fe:	f1 f7       	brne	.-4      	; 0x5fc <__LOCK_REGION_LENGTH__+0x1fc>
+ 600:	00 c0       	rjmp	.+0      	; 0x602 <__LOCK_REGION_LENGTH__+0x202>
+ 602:	00 00       	nop
+	_delay_ms(E_DELAY);
+	
+	
+// SECEND LSB BITS SENDING
+if (lcd_D3 & 1) _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;
+ 604:	00 ff       	sbrs	r16, 0
+ 606:	11 c0       	rjmp	.+34     	; 0x62a <__LOCK_REGION_LENGTH__+0x22a>
+ 608:	a2 89       	ldd	r26, Z+18	; 0x12
+ 60a:	b0 e0       	ldi	r27, 0x00	; 0
+ 60c:	90 96       	adiw	r26, 0x20	; 32
+ 60e:	3c 91       	ld	r19, X
+ 610:	90 97       	sbiw	r26, 0x20	; 32
+ 612:	81 e0       	ldi	r24, 0x01	; 1
+ 614:	90 e0       	ldi	r25, 0x00	; 0
+ 616:	04 88       	ldd	r0, Z+20	; 0x14
+ 618:	02 c0       	rjmp	.+4      	; 0x61e <__LOCK_REGION_LENGTH__+0x21e>
+ 61a:	88 0f       	add	r24, r24
+ 61c:	99 1f       	adc	r25, r25
+ 61e:	0a 94       	dec	r0
+ 620:	e2 f7       	brpl	.-8      	; 0x61a <__LOCK_REGION_LENGTH__+0x21a>
+ 622:	83 2b       	or	r24, r19
+ 624:	90 96       	adiw	r26, 0x20	; 32
+ 626:	8c 93       	st	X, r24
+ 628:	11 c0       	rjmp	.+34     	; 0x64c <__LOCK_REGION_LENGTH__+0x24c>
+else			 _SFR_IO8(D7_PORT) &= ~(1<<D7_Bit);
+ 62a:	a2 89       	ldd	r26, Z+18	; 0x12
+ 62c:	b0 e0       	ldi	r27, 0x00	; 0
+ 62e:	90 96       	adiw	r26, 0x20	; 32
+ 630:	3c 91       	ld	r19, X
+ 632:	90 97       	sbiw	r26, 0x20	; 32
+ 634:	81 e0       	ldi	r24, 0x01	; 1
+ 636:	90 e0       	ldi	r25, 0x00	; 0
+ 638:	04 88       	ldd	r0, Z+20	; 0x14
+ 63a:	02 c0       	rjmp	.+4      	; 0x640 <__LOCK_REGION_LENGTH__+0x240>
+ 63c:	88 0f       	add	r24, r24
+ 63e:	99 1f       	adc	r25, r25
+ 640:	0a 94       	dec	r0
+ 642:	e2 f7       	brpl	.-8      	; 0x63c <__LOCK_REGION_LENGTH__+0x23c>
+ 644:	80 95       	com	r24
+ 646:	83 23       	and	r24, r19
+ 648:	90 96       	adiw	r26, 0x20	; 32
+ 64a:	8c 93       	st	X, r24
+
+if (lcd_D2 & 1) _SFR_IO8(D6_PORT) |=   1<<D6_Bit ;
+ 64c:	c0 ff       	sbrs	r28, 0
+ 64e:	11 c0       	rjmp	.+34     	; 0x672 <__LOCK_REGION_LENGTH__+0x272>
+ 650:	a7 85       	ldd	r26, Z+15	; 0x0f
+ 652:	b0 e0       	ldi	r27, 0x00	; 0
+ 654:	90 96       	adiw	r26, 0x20	; 32
+ 656:	3c 91       	ld	r19, X
+ 658:	90 97       	sbiw	r26, 0x20	; 32
+ 65a:	81 e0       	ldi	r24, 0x01	; 1
+ 65c:	90 e0       	ldi	r25, 0x00	; 0
+ 65e:	01 88       	ldd	r0, Z+17	; 0x11
+ 660:	02 c0       	rjmp	.+4      	; 0x666 <__LOCK_REGION_LENGTH__+0x266>
+ 662:	88 0f       	add	r24, r24
+ 664:	99 1f       	adc	r25, r25
+ 666:	0a 94       	dec	r0
+ 668:	e2 f7       	brpl	.-8      	; 0x662 <__LOCK_REGION_LENGTH__+0x262>
+ 66a:	83 2b       	or	r24, r19
+ 66c:	90 96       	adiw	r26, 0x20	; 32
+ 66e:	8c 93       	st	X, r24
+ 670:	11 c0       	rjmp	.+34     	; 0x694 <__LOCK_REGION_LENGTH__+0x294>
+else			 _SFR_IO8(D6_PORT) &= ~(1<<D6_Bit);
+ 672:	a7 85       	ldd	r26, Z+15	; 0x0f
+ 674:	b0 e0       	ldi	r27, 0x00	; 0
+ 676:	90 96       	adiw	r26, 0x20	; 32
+ 678:	3c 91       	ld	r19, X
+ 67a:	90 97       	sbiw	r26, 0x20	; 32
+ 67c:	81 e0       	ldi	r24, 0x01	; 1
+ 67e:	90 e0       	ldi	r25, 0x00	; 0
+ 680:	01 88       	ldd	r0, Z+17	; 0x11
+ 682:	02 c0       	rjmp	.+4      	; 0x688 <__LOCK_REGION_LENGTH__+0x288>
+ 684:	88 0f       	add	r24, r24
+ 686:	99 1f       	adc	r25, r25
+ 688:	0a 94       	dec	r0
+ 68a:	e2 f7       	brpl	.-8      	; 0x684 <__LOCK_REGION_LENGTH__+0x284>
+ 68c:	80 95       	com	r24
+ 68e:	83 23       	and	r24, r19
+ 690:	90 96       	adiw	r26, 0x20	; 32
+ 692:	8c 93       	st	X, r24
+
+if (lcd_D1 & 1) _SFR_IO8(D5_PORT) |=   1<<D5_Bit ;
+ 694:	80 fe       	sbrs	r8, 0
+ 696:	11 c0       	rjmp	.+34     	; 0x6ba <__LOCK_REGION_LENGTH__+0x2ba>
+ 698:	a4 85       	ldd	r26, Z+12	; 0x0c
+ 69a:	b0 e0       	ldi	r27, 0x00	; 0
+ 69c:	90 96       	adiw	r26, 0x20	; 32
+ 69e:	3c 91       	ld	r19, X
+ 6a0:	90 97       	sbiw	r26, 0x20	; 32
+ 6a2:	81 e0       	ldi	r24, 0x01	; 1
+ 6a4:	90 e0       	ldi	r25, 0x00	; 0
+ 6a6:	06 84       	ldd	r0, Z+14	; 0x0e
+ 6a8:	02 c0       	rjmp	.+4      	; 0x6ae <__LOCK_REGION_LENGTH__+0x2ae>
+ 6aa:	88 0f       	add	r24, r24
+ 6ac:	99 1f       	adc	r25, r25
+ 6ae:	0a 94       	dec	r0
+ 6b0:	e2 f7       	brpl	.-8      	; 0x6aa <__LOCK_REGION_LENGTH__+0x2aa>
+ 6b2:	83 2b       	or	r24, r19
+ 6b4:	90 96       	adiw	r26, 0x20	; 32
+ 6b6:	8c 93       	st	X, r24
+ 6b8:	11 c0       	rjmp	.+34     	; 0x6dc <__LOCK_REGION_LENGTH__+0x2dc>
+else			 _SFR_IO8(D5_PORT) &= ~(1<<D5_Bit);
+ 6ba:	a4 85       	ldd	r26, Z+12	; 0x0c
+ 6bc:	b0 e0       	ldi	r27, 0x00	; 0
+ 6be:	90 96       	adiw	r26, 0x20	; 32
+ 6c0:	3c 91       	ld	r19, X
+ 6c2:	90 97       	sbiw	r26, 0x20	; 32
+ 6c4:	81 e0       	ldi	r24, 0x01	; 1
+ 6c6:	90 e0       	ldi	r25, 0x00	; 0
+ 6c8:	06 84       	ldd	r0, Z+14	; 0x0e
+ 6ca:	02 c0       	rjmp	.+4      	; 0x6d0 <__LOCK_REGION_LENGTH__+0x2d0>
+ 6cc:	88 0f       	add	r24, r24
+ 6ce:	99 1f       	adc	r25, r25
+ 6d0:	0a 94       	dec	r0
+ 6d2:	e2 f7       	brpl	.-8      	; 0x6cc <__LOCK_REGION_LENGTH__+0x2cc>
+ 6d4:	80 95       	com	r24
+ 6d6:	83 23       	and	r24, r19
+ 6d8:	90 96       	adiw	r26, 0x20	; 32
+ 6da:	8c 93       	st	X, r24
+	
+if (lcd_D0 & 1) _SFR_IO8(D4_PORT) |=   1<<D4_Bit ;
+ 6dc:	20 ff       	sbrs	r18, 0
+ 6de:	11 c0       	rjmp	.+34     	; 0x702 <__LOCK_REGION_LENGTH__+0x302>
+ 6e0:	a1 85       	ldd	r26, Z+9	; 0x09
+ 6e2:	b0 e0       	ldi	r27, 0x00	; 0
+ 6e4:	90 96       	adiw	r26, 0x20	; 32
+ 6e6:	2c 91       	ld	r18, X
+ 6e8:	90 97       	sbiw	r26, 0x20	; 32
+ 6ea:	81 e0       	ldi	r24, 0x01	; 1
+ 6ec:	90 e0       	ldi	r25, 0x00	; 0
+ 6ee:	03 84       	ldd	r0, Z+11	; 0x0b
+ 6f0:	02 c0       	rjmp	.+4      	; 0x6f6 <__LOCK_REGION_LENGTH__+0x2f6>
+ 6f2:	88 0f       	add	r24, r24
+ 6f4:	99 1f       	adc	r25, r25
+ 6f6:	0a 94       	dec	r0
+ 6f8:	e2 f7       	brpl	.-8      	; 0x6f2 <__LOCK_REGION_LENGTH__+0x2f2>
+ 6fa:	82 2b       	or	r24, r18
+ 6fc:	90 96       	adiw	r26, 0x20	; 32
+ 6fe:	8c 93       	st	X, r24
+ 700:	11 c0       	rjmp	.+34     	; 0x724 <__LOCK_REGION_LENGTH__+0x324>
+else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
+ 702:	a1 85       	ldd	r26, Z+9	; 0x09
+ 704:	b0 e0       	ldi	r27, 0x00	; 0
+ 706:	90 96       	adiw	r26, 0x20	; 32
+ 708:	2c 91       	ld	r18, X
+ 70a:	90 97       	sbiw	r26, 0x20	; 32
+ 70c:	81 e0       	ldi	r24, 0x01	; 1
+ 70e:	90 e0       	ldi	r25, 0x00	; 0
+ 710:	03 84       	ldd	r0, Z+11	; 0x0b
+ 712:	02 c0       	rjmp	.+4      	; 0x718 <__LOCK_REGION_LENGTH__+0x318>
+ 714:	88 0f       	add	r24, r24
+ 716:	99 1f       	adc	r25, r25
+ 718:	0a 94       	dec	r0
+ 71a:	e2 f7       	brpl	.-8      	; 0x714 <__LOCK_REGION_LENGTH__+0x314>
+ 71c:	80 95       	com	r24
+ 71e:	82 23       	and	r24, r18
+ 720:	90 96       	adiw	r26, 0x20	; 32
+ 722:	8c 93       	st	X, r24
+
+//SENDING
+_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
+ 724:	a6 81       	ldd	r26, Z+6	; 0x06
+ 726:	b0 e0       	ldi	r27, 0x00	; 0
+ 728:	90 96       	adiw	r26, 0x20	; 32
+ 72a:	4c 91       	ld	r20, X
+ 72c:	90 97       	sbiw	r26, 0x20	; 32
+ 72e:	81 e0       	ldi	r24, 0x01	; 1
+ 730:	90 e0       	ldi	r25, 0x00	; 0
+ 732:	9c 01       	movw	r18, r24
+ 734:	00 84       	ldd	r0, Z+8	; 0x08
+ 736:	02 c0       	rjmp	.+4      	; 0x73c <__LOCK_REGION_LENGTH__+0x33c>
+ 738:	22 0f       	add	r18, r18
+ 73a:	33 1f       	adc	r19, r19
+ 73c:	0a 94       	dec	r0
+ 73e:	e2 f7       	brpl	.-8      	; 0x738 <__LOCK_REGION_LENGTH__+0x338>
+ 740:	24 2b       	or	r18, r20
+ 742:	90 96       	adiw	r26, 0x20	; 32
+ 744:	2c 93       	st	X, r18
+ 746:	af ec       	ldi	r26, 0xCF	; 207
+ 748:	b7 e0       	ldi	r27, 0x07	; 7
+ 74a:	11 97       	sbiw	r26, 0x01	; 1
+ 74c:	f1 f7       	brne	.-4      	; 0x74a <__LOCK_REGION_LENGTH__+0x34a>
+ 74e:	00 c0       	rjmp	.+0      	; 0x750 <__LOCK_REGION_LENGTH__+0x350>
+ 750:	00 00       	nop
+_delay_ms(E_DELAY);
+_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
+ 752:	a6 81       	ldd	r26, Z+6	; 0x06
+ 754:	b0 e0       	ldi	r27, 0x00	; 0
+ 756:	90 96       	adiw	r26, 0x20	; 32
+ 758:	2c 91       	ld	r18, X
+ 75a:	90 97       	sbiw	r26, 0x20	; 32
+ 75c:	00 84       	ldd	r0, Z+8	; 0x08
+ 75e:	02 c0       	rjmp	.+4      	; 0x764 <__LOCK_REGION_LENGTH__+0x364>
+ 760:	88 0f       	add	r24, r24
+ 762:	99 1f       	adc	r25, r25
+ 764:	0a 94       	dec	r0
+ 766:	e2 f7       	brpl	.-8      	; 0x760 <__LOCK_REGION_LENGTH__+0x360>
+ 768:	80 95       	com	r24
+ 76a:	82 23       	and	r24, r18
+ 76c:	90 96       	adiw	r26, 0x20	; 32
+ 76e:	8c 93       	st	X, r24
+ 770:	8f ec       	ldi	r24, 0xCF	; 207
+ 772:	97 e0       	ldi	r25, 0x07	; 7
+ 774:	01 97       	sbiw	r24, 0x01	; 1
+ 776:	f1 f7       	brne	.-4      	; 0x774 <__LOCK_REGION_LENGTH__+0x374>
+ 778:	00 c0       	rjmp	.+0      	; 0x77a <__LOCK_REGION_LENGTH__+0x37a>
+ 77a:	00 00       	nop
+_delay_ms(E_DELAY);
+}
+ 77c:	df 91       	pop	r29
+ 77e:	cf 91       	pop	r28
+ 780:	1f 91       	pop	r17
+ 782:	0f 91       	pop	r16
+ 784:	ff 90       	pop	r15
+ 786:	ef 90       	pop	r14
+ 788:	df 90       	pop	r13
+ 78a:	cf 90       	pop	r12
+ 78c:	bf 90       	pop	r11
+ 78e:	af 90       	pop	r10
+ 790:	9f 90       	pop	r9
+ 792:	8f 90       	pop	r8
+ 794:	08 95       	ret
+
+00000796 <main>:
 
 
 	public:
 	CH_LCD ();
 	
 	void SetRSPin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { RS_PORT = ADD_PORT ; RS_DDR = ADD_DDR ; RS_Bit = Bit ; }
- 5b6:	e0 e6       	ldi	r30, 0x60	; 96
- 5b8:	f0 e0       	ldi	r31, 0x00	; 0
- 5ba:	9b e1       	ldi	r25, 0x1B	; 27
- 5bc:	90 83       	st	Z, r25
- 5be:	8a e1       	ldi	r24, 0x1A	; 26
- 5c0:	81 83       	std	Z+1, r24	; 0x01
- 5c2:	12 82       	std	Z+2, r1	; 0x02
+ 796:	e0 e6       	ldi	r30, 0x60	; 96
+ 798:	f0 e0       	ldi	r31, 0x00	; 0
+ 79a:	95 e1       	ldi	r25, 0x15	; 21
+ 79c:	90 83       	st	Z, r25
+ 79e:	84 e1       	ldi	r24, 0x14	; 20
+ 7a0:	81 83       	std	Z+1, r24	; 0x01
+ 7a2:	12 82       	std	Z+2, r1	; 0x02
 	void SetRWPin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { RW_PORT = ADD_PORT ; RW_DDR = ADD_DDR ; RW_Bit = Bit ; }
- 5c4:	93 83       	std	Z+3, r25	; 0x03
- 5c6:	84 83       	std	Z+4, r24	; 0x04
- 5c8:	21 e0       	ldi	r18, 0x01	; 1
- 5ca:	25 83       	std	Z+5, r18	; 0x05
+ 7a4:	93 83       	std	Z+3, r25	; 0x03
+ 7a6:	84 83       	std	Z+4, r24	; 0x04
+ 7a8:	21 e0       	ldi	r18, 0x01	; 1
+ 7aa:	25 83       	std	Z+5, r18	; 0x05
 	void SetEPin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { E_PORT = ADD_PORT ; E_DDR = ADD_DDR ; E_Bit = Bit ; }
- 5cc:	96 83       	std	Z+6, r25	; 0x06
- 5ce:	87 83       	std	Z+7, r24	; 0x07
- 5d0:	27 e0       	ldi	r18, 0x07	; 7
- 5d2:	20 87       	std	Z+8, r18	; 0x08
+ 7ac:	96 83       	std	Z+6, r25	; 0x06
+ 7ae:	87 83       	std	Z+7, r24	; 0x07
+ 7b0:	22 e0       	ldi	r18, 0x02	; 2
+ 7b2:	20 87       	std	Z+8, r18	; 0x08
 	void SetD4Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D4_PORT = ADD_PORT ; D4_DDR = ADD_DDR ; D4_Bit = Bit ; }
- 5d4:	91 87       	std	Z+9, r25	; 0x09
- 5d6:	82 87       	std	Z+10, r24	; 0x0a
- 5d8:	23 e0       	ldi	r18, 0x03	; 3
- 5da:	23 87       	std	Z+11, r18	; 0x0b
+ 7b4:	91 87       	std	Z+9, r25	; 0x09
+ 7b6:	82 87       	std	Z+10, r24	; 0x0a
+ 7b8:	23 e0       	ldi	r18, 0x03	; 3
+ 7ba:	23 87       	std	Z+11, r18	; 0x0b
 	void SetD5Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D5_PORT = ADD_PORT ; D5_DDR = ADD_DDR ; D5_Bit = Bit ; }
- 5dc:	94 87       	std	Z+12, r25	; 0x0c
- 5de:	85 87       	std	Z+13, r24	; 0x0d
- 5e0:	24 e0       	ldi	r18, 0x04	; 4
- 5e2:	26 87       	std	Z+14, r18	; 0x0e
+ 7bc:	94 87       	std	Z+12, r25	; 0x0c
+ 7be:	85 87       	std	Z+13, r24	; 0x0d
+ 7c0:	24 e0       	ldi	r18, 0x04	; 4
+ 7c2:	26 87       	std	Z+14, r18	; 0x0e
 	void SetD6Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D6_PORT = ADD_PORT ; D6_DDR = ADD_DDR ; D6_Bit = Bit ; }
- 5e4:	97 87       	std	Z+15, r25	; 0x0f
- 5e6:	80 8b       	std	Z+16, r24	; 0x10
- 5e8:	25 e0       	ldi	r18, 0x05	; 5
- 5ea:	21 8b       	std	Z+17, r18	; 0x11
+ 7c4:	97 87       	std	Z+15, r25	; 0x0f
+ 7c6:	80 8b       	std	Z+16, r24	; 0x10
+ 7c8:	25 e0       	ldi	r18, 0x05	; 5
+ 7ca:	21 8b       	std	Z+17, r18	; 0x11
 	void SetD7Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D7_PORT = ADD_PORT ; D7_DDR = ADD_DDR ; D7_Bit = Bit ; }
- 5ec:	92 8b       	std	Z+18, r25	; 0x12
- 5ee:	83 8b       	std	Z+19, r24	; 0x13
- 5f0:	86 e0       	ldi	r24, 0x06	; 6
- 5f2:	84 8b       	std	Z+20, r24	; 0x14
-	LCD1.SetEPin  (ADD(PORTA),ADD(DDRA),7);
-	LCD1.SetD4Pin (ADD(PORTA),ADD(DDRA),3);
-	LCD1.SetD5Pin (ADD(PORTA),ADD(DDRA),4);
-	LCD1.SetD6Pin (ADD(PORTA),ADD(DDRA),5);
-	LCD1.SetD7Pin (ADD(PORTA),ADD(DDRA),6);
+ 7cc:	92 8b       	std	Z+18, r25	; 0x12
+ 7ce:	83 8b       	std	Z+19, r24	; 0x13
+ 7d0:	86 e0       	ldi	r24, 0x06	; 6
+ 7d2:	84 8b       	std	Z+20, r24	; 0x14
+	LCD1.SetEPin  (ADD(PORTC),ADD(DDRC),2);
+	LCD1.SetD4Pin (ADD(PORTC),ADD(DDRC),3);
+	LCD1.SetD5Pin (ADD(PORTC),ADD(DDRC),4);
+	LCD1.SetD6Pin (ADD(PORTC),ADD(DDRC),5);
+	LCD1.SetD7Pin (ADD(PORTC),ADD(DDRC),6);
 	LCD1.Init();
- 5f4:	cf 01       	movw	r24, r30
- 5f6:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD4InitEv>
+ 7d4:	cf 01       	movw	r24, r30
+ 7d6:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD4InitEv>
 	
-	
- 5fa:	80 e0       	ldi	r24, 0x00	; 0
- 5fc:	90 e0       	ldi	r25, 0x00	; 0
- 5fe:	08 95       	ret
+	//PORTC=255;
+	//_delay_ms(2000);
+	//PORTC = 0;
+	//_delay_ms(2000);	
+	LCD1.SendCommand(0,0,0B00100000);//3
+ 7da:	20 e2       	ldi	r18, 0x20	; 32
+ 7dc:	40 e0       	ldi	r20, 0x00	; 0
+ 7de:	60 e0       	ldi	r22, 0x00	; 0
+ 7e0:	80 e6       	ldi	r24, 0x60	; 96
+ 7e2:	90 e0       	ldi	r25, 0x00	; 0
+ 7e4:	0e 94 bf 01 	call	0x37e	; 0x37e <_ZN6CH_LCD11SendCommandEhhh>
+ 7e8:	8f e1       	ldi	r24, 0x1F	; 31
+ 7ea:	9e e4       	ldi	r25, 0x4E	; 78
+ 7ec:	01 97       	sbiw	r24, 0x01	; 1
+ 7ee:	f1 f7       	brne	.-4      	; 0x7ec <main+0x56>
+ 7f0:	00 c0       	rjmp	.+0      	; 0x7f2 <main+0x5c>
+ 7f2:	00 00       	nop
+	_delay_ms(delay);
+	LCD1.SendCommand(0,0,0B00001110);//4
+ 7f4:	2e e0       	ldi	r18, 0x0E	; 14
+ 7f6:	40 e0       	ldi	r20, 0x00	; 0
+ 7f8:	60 e0       	ldi	r22, 0x00	; 0
+ 7fa:	80 e6       	ldi	r24, 0x60	; 96
+ 7fc:	90 e0       	ldi	r25, 0x00	; 0
+ 7fe:	0e 94 bf 01 	call	0x37e	; 0x37e <_ZN6CH_LCD11SendCommandEhhh>
+ 802:	8f e1       	ldi	r24, 0x1F	; 31
+ 804:	9e e4       	ldi	r25, 0x4E	; 78
+ 806:	01 97       	sbiw	r24, 0x01	; 1
+ 808:	f1 f7       	brne	.-4      	; 0x806 <main+0x70>
+ 80a:	00 c0       	rjmp	.+0      	; 0x80c <main+0x76>
+ 80c:	00 00       	nop
+	_delay_ms(delay);
+	LCD1.SendCommand(0,0,0B00000110);//5
+ 80e:	26 e0       	ldi	r18, 0x06	; 6
+ 810:	40 e0       	ldi	r20, 0x00	; 0
+ 812:	60 e0       	ldi	r22, 0x00	; 0
+ 814:	80 e6       	ldi	r24, 0x60	; 96
+ 816:	90 e0       	ldi	r25, 0x00	; 0
+ 818:	0e 94 bf 01 	call	0x37e	; 0x37e <_ZN6CH_LCD11SendCommandEhhh>
+ 81c:	8f e1       	ldi	r24, 0x1F	; 31
+ 81e:	9e e4       	ldi	r25, 0x4E	; 78
+ 820:	01 97       	sbiw	r24, 0x01	; 1
+ 822:	f1 f7       	brne	.-4      	; 0x820 <main+0x8a>
+ 824:	00 c0       	rjmp	.+0      	; 0x826 <main+0x90>
+ 826:	00 00       	nop
+	_delay_ms(delay);
+	LCD1.SendCommand(1,0,0B01001000);//6
+ 828:	28 e4       	ldi	r18, 0x48	; 72
+ 82a:	40 e0       	ldi	r20, 0x00	; 0
+ 82c:	61 e0       	ldi	r22, 0x01	; 1
+ 82e:	80 e6       	ldi	r24, 0x60	; 96
+ 830:	90 e0       	ldi	r25, 0x00	; 0
+ 832:	0e 94 bf 01 	call	0x37e	; 0x37e <_ZN6CH_LCD11SendCommandEhhh>
+ 836:	8f e1       	ldi	r24, 0x1F	; 31
+ 838:	9e e4       	ldi	r25, 0x4E	; 78
+ 83a:	01 97       	sbiw	r24, 0x01	; 1
+ 83c:	f1 f7       	brne	.-4      	; 0x83a <main+0xa4>
+ 83e:	00 c0       	rjmp	.+0      	; 0x840 <main+0xaa>
+ 840:	00 00       	nop
+	_delay_ms(delay);
+	//LCD1.SendCommand(1,0,0B01001001);//7
+	//_delay_ms(delay);
+	while(1){
+			LCD1.SendCommand(1,0,0B01001000);//6
+ 842:	28 e4       	ldi	r18, 0x48	; 72
+ 844:	40 e0       	ldi	r20, 0x00	; 0
+ 846:	61 e0       	ldi	r22, 0x01	; 1
+ 848:	80 e6       	ldi	r24, 0x60	; 96
+ 84a:	90 e0       	ldi	r25, 0x00	; 0
+ 84c:	0e 94 bf 01 	call	0x37e	; 0x37e <_ZN6CH_LCD11SendCommandEhhh>
+ 850:	9f ef       	ldi	r25, 0xFF	; 255
+ 852:	29 e6       	ldi	r18, 0x69	; 105
+ 854:	88 e1       	ldi	r24, 0x18	; 24
+ 856:	91 50       	subi	r25, 0x01	; 1
+ 858:	20 40       	sbci	r18, 0x00	; 0
+ 85a:	80 40       	sbci	r24, 0x00	; 0
+ 85c:	e1 f7       	brne	.-8      	; 0x856 <main+0xc0>
+ 85e:	00 c0       	rjmp	.+0      	; 0x860 <__stack+0x1>
+ 860:	00 00       	nop
+ 862:	ef cf       	rjmp	.-34     	; 0x842 <main+0xac>
 
-00000600 <_GLOBAL__sub_I__ZN6CH_LCDC2Ev>:
+00000864 <_GLOBAL__sub_I__ZN6CH_LCDC2Ev>:
 #define _CH_LCD_
-
+#define delay 10
 #include "D:\GitHub\MYLCDLIB\Lib\mlcd.cpp"
 #include "D:\GitHub\MYLCDLIB\Lib\mlcd.h"
 
 CH_LCD LCD1;
- 600:	80 e6       	ldi	r24, 0x60	; 96
- 602:	90 e0       	ldi	r25, 0x00	; 0
- 604:	0e 94 4a 00 	call	0x94	; 0x94 <_ZN6CH_LCDC1Ev>
- 608:	08 95       	ret
+ 864:	80 e6       	ldi	r24, 0x60	; 96
+ 866:	90 e0       	ldi	r25, 0x00	; 0
+ 868:	0e 94 4a 00 	call	0x94	; 0x94 <_ZN6CH_LCDC1Ev>
+ 86c:	08 95       	ret
 
-0000060a <__tablejump2__>:
- 60a:	ee 0f       	add	r30, r30
- 60c:	ff 1f       	adc	r31, r31
- 60e:	05 90       	lpm	r0, Z+
- 610:	f4 91       	lpm	r31, Z
- 612:	e0 2d       	mov	r30, r0
- 614:	09 94       	ijmp
+0000086e <__tablejump2__>:
+ 86e:	ee 0f       	add	r30, r30
+ 870:	ff 1f       	adc	r31, r31
+ 872:	05 90       	lpm	r0, Z+
+ 874:	f4 91       	lpm	r31, Z
+ 876:	e0 2d       	mov	r30, r0
+ 878:	09 94       	ijmp
 
-00000616 <_exit>:
- 616:	f8 94       	cli
+0000087a <_exit>:
+ 87a:	f8 94       	cli
 
-00000618 <__stop_program>:
- 618:	ff cf       	rjmp	.-2      	; 0x618 <__stop_program>
+0000087c <__stop_program>:
+ 87c:	ff cf       	rjmp	.-2      	; 0x87c <__stop_program>

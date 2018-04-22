@@ -1,33 +1,3 @@
-//*****************************************************************************
-//
-// Project Or Library Name
-//
-//						Development Library LCD Character
-//
-//
-// Title		: 4 bit LCd interface
-// Author		: Hamid Davoodi Shandiz - Copyright (C) 2017
-// Created		: 2007-03-29
-// Revised		: 2018-01-27
-// Version		: 4.6.2.0
-// Target MCU	: Atmel AVR series
-//
-// Updates
-// 4.6.2.0		: Add New Functions ( Setpin )
-//				  Update & Add Functions ( Init )
-//				  Update Function ( BigNumber )
-//				  Change Name Functions ( VariableHex_Length ) to ( VariableHex )
-//				  Add New Function ( Number )
-//				  Add New Function ( FloatNumber )
-//				  Add New Function ( Printf )
-//
-// This code is distributed under the GNU Public License
-//		which can be found at AtmelStudio.com
-//
-// Email : info@atmelstudio.com
-//
-//*****************************************************************************
-
 # ifndef _CH_LCD_
 #  warning "Not define _LCD_LIB_ . Please define ! "
 # define _CH_LCD_
