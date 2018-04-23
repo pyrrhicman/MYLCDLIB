@@ -3,8 +3,8 @@
 #define F_CPU 8000000UL
 #define _CH_LCD_
 #define delay 1
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.cpp"
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.h"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib\mlcd.h"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib\mlcd.cpp"
 
 CH_LCD LCD1;
 
@@ -21,19 +21,22 @@ int main(void)
 	LCD1.SetD7Pin (ADD(PORTC),ADD(DDRC),6);
 	LCD1.Init();
 	
-	LCD1.SendCommand(0,0,0B00100000);//3
+
+	//LCD1.SendCommand(1,0,0B01001000);//6
 	_delay_ms(delay);
-	LCD1.SendCommand(0,0,0B00001110);//4
-	_delay_ms(delay);
-	LCD1.SendCommand(0,0,0B00000110);//5
-	_delay_ms(delay);
-	LCD1.SendCommand(1,0,0B01001000);//6
-	_delay_ms(delay);
-	
+	unsigned char charr;
 	while(1)
 	{
-	LCD1.SendCommand(1,0,0B01001000);//6
+		
+	LCD1.SendCommand(1,0,charr);//6
 	_delay_ms(250);
+	LCD1.SendCommand(1,0,charr);//6
+	_delay_ms(250);
+	LCD1.SendCommand(1,0,charr);//6
+	_delay_ms(250);
+	LCD1.SendCommand(0,0,0B00000010);//6
+	_delay_ms(250);	
+	charr++;
 	}
 	
 }
