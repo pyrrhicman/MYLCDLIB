@@ -37,8 +37,10 @@ void CH_LCD :: Init()//Initializes LCD
 	_SFR_IO8(RW_DDR)  |= 1<<RW_Bit ;
 	//D4  D5  D6  D7  E  RS  RW			SETTING DDR
 	//1   1   1	  1   1  1   1
-	/////////////////////////////	SETTING DDR	DONE	///////////////////////////
+	/////////////////////////////	SETTING DDR	DONE	//
 
+
+	/////////////////////////////	FIRST FUNCTION SET	//
 	//_SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
 	_SFR_IO8(RS_PORT) &= ~(1<<RS_Bit);
 	
@@ -62,10 +64,10 @@ void CH_LCD :: Init()//Initializes LCD
 	_delay_ms(E_DELAY);
 	_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
 	_delay_ms(E_DELAY);
-
-	SendCommand(0,0,0B00100000);//3
+	
+	SendCommand(0,0,0B00100000);//3/SETTING FUNCTION SET	//
 	_delay_ms(E_DELAY);
-	SendCommand(0,0,0B00001100);//4
+	SendCommand(0,0,0B00001100);//4 Display on/off control
 	_delay_ms(E_DELAY);
 	SendCommand(0,0,0B00000110);//5 Entry mode set
 	_delay_ms(E_DELAY);
@@ -138,6 +140,43 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
 	_SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
 	/* SENDING Finished */
 }
+
+void CH_LCD :: SendChar(uint8_t sending_Char)		//Sends Char to LCD
+{
+	SendCommand(1,0,sending_Char);
+}
+
+void CH_LCD :: SendString(char *String )
+{
+	while(*String)
+	{
+		SendChar(*String++ );
+	}
+}
+
+void CH_LCD :: CursorMode(int mode )
+{
+	if (mode == 0)
+	{
+	SendCommand(0,0,0b00001100);	
+	} 
+	else if(mode == 1)
+	{
+	SendCommand(0,0,0b00001101);		
+	}
+	else if(mode == 2)
+	{
+	SendCommand(0,0,0b00001110);		
+	}
+	else if(mode == 3)
+	{
+	SendCommand(0,0,0b00001111);
+	}
+}
+
+
+
+
 
 
 

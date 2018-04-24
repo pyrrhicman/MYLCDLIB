@@ -5,19 +5,17 @@
 
 #ifndef CHARACTER_LCD_LIB_CPP
 #define CHARACTER_LCD_LIB_CPP
-
-#define Version_CHARACTER_LCD_LIB 04060200
-
+//#define Version_CHARACTER_LCD_LIB 04060200
 #ifndef F_CPU
 /* prevent compiler error by supplying a default */
-# warning "F_CPU not defined for <util/delay.h>"
-# define F_CPU 16000000UL
+# warning "F_CPU not defined for <util/delay.h> 8Mhz is default"
+# define F_CPU 8000000UL
 #endif
 
 #include <util/delay.h>
 
 // ===  User Defined Character  ===
-
+/*
 #if Version_CHARACTER_LCD_LIB >= 04060200
 
 enum Mode_Character_LCD {None_Mode};
@@ -28,6 +26,8 @@ enum Mode_Character_LCD {None_Mode};
 
 
 #endif
+
+*/
 
 
 #define ADD(X) _SFR_IO_ADDR(X)
@@ -44,8 +44,6 @@ class CH_LCD
 	uint8_t D7_PORT , D7_DDR , D7_Bit ;
 	uint8_t User_Defined_Character ;
 
-
-
 	public:
 	CH_LCD ();
 	
@@ -58,8 +56,9 @@ class CH_LCD
 	void SetD7Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D7_PORT = ADD_PORT ; D7_DDR = ADD_DDR ; D7_Bit = Bit ; }
 	void SendCommand(uint8_t,uint8_t,uint8_t);									//forms data ready to send to 74HC164
 	void Init();																//Initializes LCD
-	
-	private:
+	void SendChar(uint8_t);
+	void SendString(char*);
+	void CursorMode(int);
 	
 };
 
