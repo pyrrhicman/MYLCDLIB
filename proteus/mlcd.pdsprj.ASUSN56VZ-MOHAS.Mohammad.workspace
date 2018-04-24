@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c0000000000000001000000ffffffffffffffffffffffffffffffff31ffffff460000004d050000f1020000</PLACEMENT>
+  <PLACEMENT>2c00000002000000030000000083ffff0083ffffffffffffffffffff91ffffff23010000ad050000ce030000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
-   <POPUP w="800" x="240" flags="00000002" y="226" h="200" pid="0" iid="-1">
+   <POPUP w="800" x="1007" flags="00000002" y="810" h="200" pid="0" iid="-1">
     <PROPERTIES>
      <ITEM name="Message Column Width">663</ITEM>
      <ITEM name="ShowGrid">No</ITEM>
@@ -32,7 +32,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="226" x="79" flags="00000008" y="205" h="215" pid="3" iid="15">
+   <POPUP w="226" x="146" flags="00000008" y="199" h="215" pid="3" iid="15">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="8" x="99" flags="0000000a" y="225" h="1" pid="10" iid="15">
@@ -65,7 +65,7 @@
      <ITEM name="TopLineAddress">00000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="159" flags="00000000" y="285" h="32" pid="14" iid="15">
+   <POPUP w="16" x="327" flags="00000000" y="261" h="32" pid="14" iid="15">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -75,7 +75,7 @@
      <ITEM name="TopLineAddress">00000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="179" flags="0000000a" y="305" h="32" pid="4" iid="15">
+   <POPUP w="56" x="216" flags="0000000a" y="227" h="59" pid="4" iid="15">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -85,7 +85,7 @@
      <ITEM name="TopLineAddress">00000060</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="16" x="199" flags="0000000a" y="325" h="8" pid="13" iid="15">
+   <POPUP w="28" x="148" flags="0000000a" y="313" h="43" pid="13" iid="15">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>

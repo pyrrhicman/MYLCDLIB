@@ -1,10 +1,25 @@
 ﻿#include "mlcd.h"
+
+
+unsigned char row;
+unsigned char column;
+unsigned char MaxShowableAddressInOneLine; 
+
+
+
+#define Character_LCD_LINE0_DDRAMADDR		0x00
+#define Character_LCD_LINE1_DDRAMADDR		0x40
+#define Character_LCD_LINE2_DDRAMADDR		0x14
+#define Character_LCD_LINE3_DDRAMADDR		0x54
+
 #define E_DELAY 1
 # ifdef _CH_LCD_
 
 
 CH_LCD :: CH_LCD ()
 {
+
+	
 	RS_PORT = 0x1B ; RS_DDR = 0x1A ; RS_Bit = 0 ;
 	RW_PORT = 0x1B ; RW_DDR = 0x1A ; RW_Bit = 1 ;
 	E_PORT = 0x1B ; E_DDR = 0x1A ; E_Bit  = 2 ;
@@ -15,8 +30,13 @@ CH_LCD :: CH_LCD ()
 	D7_PORT = 0x1B ; D7_DDR = 0x1A ; D7_Bit = 6 ;	
 }
 
-void CH_LCD :: Init()//Initializes LCD
+void CH_LCD :: Init(int x , int y)//Initializes LCD
 {
+	row = y;
+	column= x;
+	MaxShowableAddressInOneLine = y ;
+	
+	
 	_delay_ms(15);
 
 	/////////////////////////////	SETTING DDR		///////////////////////////
@@ -174,11 +194,120 @@ void CH_LCD :: CursorMode(int mode )
 	}
 }
 
+void CH_LCD :: SendInteger(unsigned int Integer )//65535
+{
+	unsigned int cacheInteger = Integer;
+	
+	unsigned int num5 = cacheInteger /10000;//6
+	cacheInteger -= num5*10000;		//5535
+	unsigned int num4 = cacheInteger /1000;	//5
+	cacheInteger -= num4*1000;		//535
+	unsigned int num3 = cacheInteger /100;	//5
+	cacheInteger -= num3*100;		//35
+	unsigned int num2 = cacheInteger /10;	//3
+	cacheInteger -= num2*10;		//5
+	unsigned int num1 = cacheInteger /1;		//5
+	cacheInteger -= num1;			//0	
+	if (num5 == 0)
+	{
+		if (num4 == 0)
+		{
+			if (num3 == 0)
+			{
+				if (num2 == 0)
+				{
+					if (num1 == 0)
+					{
+						SendChar(0+48);
+					}
+				}
+			}
+		}
+	}
+	
+	if (num5 == 0)
+	{
+		if (num4 == 0)
+		{
+			if (num3 == 0)
+			{
+				if (num2 == 0)
+				{	
+					if (num1 != 0)
+					{
+						SendChar(num1+48);
+					}
+
+				}
+			}
+		}
+	}	
+	
+	if (num5 == 0)
+	{
+			if (num4 == 0)
+			{
+				if (num3 == 0)
+				{
+					if (num2 != 0)
+					{
+						SendChar(num2+48);
+						SendChar(num1+48);
+					}
+				}
+			}
+	}	
+	
+	if (num5 == 0)
+	{
+			if (num4 == 0)
+			{
+				if (num3 != 0)
+				{
+					SendChar(num3+48);
+					SendChar(num2+48);
+					SendChar(num1+48);
+				}
+			}
+	}	
+	
+	if (num5 == 0)
+	{
+			if (num4 != 0)
+			{
+				SendChar(num4+48);
+				SendChar(num3+48);
+				SendChar(num2+48);
+				SendChar(num1+48);
+			}
+	}
+	
+	if (num5 != 0)
+	{
+		SendChar(num5+48);
+		SendChar(num4+48);
+		SendChar(num3+48);
+		SendChar(num2+48);
+		SendChar(num1+48);
+	}
+}
 
 
+void CH_LCD :: Home()
+{
+	SendCommand(0,0,0b00000010);	
+}
 
+void CH_LCD :: Clear()
+{
+	SendCommand(0,0,0b00000001);
+}
 
-
+void CH_LCD :: Goto(int x, int y)
+{
+	
+	
+}
 
 # endif
 
