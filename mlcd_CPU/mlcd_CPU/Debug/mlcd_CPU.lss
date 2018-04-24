@@ -3,31 +3,31 @@ mlcd_CPU.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000928  00000000  00000000  00000074  2**1
+  0 .text         000008a6  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  0000099c  2**0
+  1 .data         00000000  00800060  00800060  0000091a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000016  00800060  00800060  0000099c  2**0
+  2 .bss          00000016  00800060  00800060  0000091a  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  0000099c  2**0
+  3 .comment      00000030  00000000  00000000  0000091a  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000009cc  2**2
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000094c  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000040  00000000  00000000  00000a08  2**0
+  5 .debug_aranges 00000040  00000000  00000000  00000988  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001228  00000000  00000000  00000a48  2**0
+  6 .debug_info   00001093  00000000  00000000  000009c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000701  00000000  00000000  00001c70  2**0
+  7 .debug_abbrev 000006f2  00000000  00000000  00001a5b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000005e7  00000000  00000000  00002371  2**0
+  8 .debug_line   00000572  00000000  00000000  0000214d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000ac  00000000  00000000  00002958  2**2
+  9 .debug_frame  000000ac  00000000  00000000  000026c0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000060c  00000000  00000000  00002a04  2**0
+ 10 .debug_str    0000060c  00000000  00000000  0000276c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000889  00000000  00000000  00003010  2**0
+ 11 .debug_loc    00000769  00000000  00000000  00002d78  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000030  00000000  00000000  00003899  2**0
+ 12 .debug_ranges 00000030  00000000  00000000  000034e1  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -56,7 +56,7 @@ Disassembly of section .text:
   50:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
 
 00000054 <__ctors_start>:
-  54:	87 04       	cpc	r8, r7
+  54:	46 04       	cpc	r4, r6
 
 00000056 <__ctors_end>:
   56:	11 24       	eor	r1, r1
@@ -87,12 +87,12 @@ Disassembly of section .text:
   78:	04 c0       	rjmp	.+8      	; 0x82 <__do_global_ctors+0x10>
   7a:	21 97       	sbiw	r28, 0x01	; 1
   7c:	fe 01       	movw	r30, r28
-  7e:	0e 94 8c 04 	call	0x918	; 0x918 <__tablejump2__>
+  7e:	0e 94 4b 04 	call	0x896	; 0x896 <__tablejump2__>
   82:	ca 32       	cpi	r28, 0x2A	; 42
   84:	d1 07       	cpc	r29, r17
   86:	c9 f7       	brne	.-14     	; 0x7a <__do_global_ctors+0x8>
   88:	0e 94 1d 04 	call	0x83a	; 0x83a <main>
-  8c:	0c 94 92 04 	jmp	0x924	; 0x924 <_exit>
+  8c:	0c 94 51 04 	jmp	0x8a2	; 0x8a2 <_exit>
 
 00000090 <__bad_interrupt>:
   90:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -224,7 +224,7 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
  14c:	88 1f       	adc	r24, r24
  14e:	99 0b       	sbc	r25, r25
 	
-// MSB BITS SENDING
+// MSB BITS READY
 	if (rs_Bit & 1)  _SFR_IO8(RS_PORT) |=   1<<RS_Bit ;
  150:	60 ff       	sbrs	r22, 0
  152:	11 c0       	rjmp	.+34     	; 0x176 <_ZN6CH_LCD11SendCommandEhhh+0xa4>
@@ -459,7 +459,7 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
  2fc:	90 96       	adiw	r26, 0x20	; 32
  2fe:	8c 93       	st	X, r24
 
-	//SENDING
+	/*SENDING*/
 	_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
  300:	a6 81       	ldd	r26, Z+6	; 0x06
  302:	b0 e0       	ldi	r27, 0x00	; 0
@@ -514,9 +514,10 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
  354:	00 c0       	rjmp	.+0      	; 0x356 <_ZN6CH_LCD11SendCommandEhhh+0x284>
  356:	00 00       	nop
 	_delay_ms(E_DELAY);
+	/* SENDING Finished */
+
 	
-	
-	// LSB BITS SENDING
+	// LSB BITS READY
 	if (lcd_D3 & 1)  _SFR_IO8(D7_PORT) |=   1<<D7_Bit ;
  358:	00 ff       	sbrs	r16, 0
  35a:	11 c0       	rjmp	.+34     	; 0x37e <_ZN6CH_LCD11SendCommandEhhh+0x2ac>
@@ -673,7 +674,7 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
  474:	90 96       	adiw	r26, 0x20	; 32
  476:	8c 93       	st	X, r24
 
-	//SENDING
+	/*SENDING proses*/
 	_SFR_IO8(E_PORT)  |=   1<<E_Bit  ;
  478:	a6 81       	ldd	r26, Z+6	; 0x06
  47a:	b0 e0       	ldi	r27, 0x00	; 0
@@ -831,6 +832,7 @@ void CH_LCD :: SendCommand(uint8_t rs_Bit,uint8_t rw_Bit,uint8_t command)	//Send
  596:	82 23       	and	r24, r18
  598:	90 96       	adiw	r26, 0x20	; 32
  59a:	8c 93       	st	X, r24
+	/* SENDING Finished */
 }
  59c:	df 91       	pop	r29
  59e:	cf 91       	pop	r28
@@ -1208,7 +1210,7 @@ void CH_LCD :: Init()//Initializes LCD
  818:	00 c0       	rjmp	.+0      	; 0x81a <_ZN6CH_LCD4InitEv+0x264>
  81a:	00 00       	nop
 	_delay_ms(E_DELAY);
-	SendCommand(0,0,0B00000110);//5
+	SendCommand(0,0,0B00000110);//5 Entry mode set
  81c:	26 e0       	ldi	r18, 0x06	; 6
  81e:	40 e0       	ldi	r20, 0x00	; 0
  820:	60 e0       	ldi	r22, 0x00	; 0
@@ -1286,105 +1288,30 @@ void CH_LCD :: Init()//Initializes LCD
  884:	f1 f7       	brne	.-4      	; 0x882 <__stack+0x23>
  886:	00 c0       	rjmp	.+0      	; 0x888 <__stack+0x29>
  888:	00 00       	nop
-	_delay_ms(delay);
-	unsigned char charr;
-	while(1)
-	{
-		
-	LCD1.SendCommand(1,0,charr);//6
- 88a:	2c 2f       	mov	r18, r28
- 88c:	40 e0       	ldi	r20, 0x00	; 0
- 88e:	61 e0       	ldi	r22, 0x01	; 1
- 890:	80 e6       	ldi	r24, 0x60	; 96
- 892:	90 e0       	ldi	r25, 0x00	; 0
- 894:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD11SendCommandEhhh>
- 898:	9f e7       	ldi	r25, 0x7F	; 127
- 89a:	2a e1       	ldi	r18, 0x1A	; 26
- 89c:	86 e0       	ldi	r24, 0x06	; 6
- 89e:	91 50       	subi	r25, 0x01	; 1
- 8a0:	20 40       	sbci	r18, 0x00	; 0
- 8a2:	80 40       	sbci	r24, 0x00	; 0
- 8a4:	e1 f7       	brne	.-8      	; 0x89e <__stack+0x3f>
- 8a6:	00 c0       	rjmp	.+0      	; 0x8a8 <__stack+0x49>
- 8a8:	00 00       	nop
-	_delay_ms(250);
-	LCD1.SendCommand(1,0,charr);//6
- 8aa:	2c 2f       	mov	r18, r28
- 8ac:	40 e0       	ldi	r20, 0x00	; 0
- 8ae:	61 e0       	ldi	r22, 0x01	; 1
- 8b0:	80 e6       	ldi	r24, 0x60	; 96
- 8b2:	90 e0       	ldi	r25, 0x00	; 0
- 8b4:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD11SendCommandEhhh>
- 8b8:	9f e7       	ldi	r25, 0x7F	; 127
- 8ba:	2a e1       	ldi	r18, 0x1A	; 26
- 8bc:	86 e0       	ldi	r24, 0x06	; 6
- 8be:	91 50       	subi	r25, 0x01	; 1
- 8c0:	20 40       	sbci	r18, 0x00	; 0
- 8c2:	80 40       	sbci	r24, 0x00	; 0
- 8c4:	e1 f7       	brne	.-8      	; 0x8be <__stack+0x5f>
- 8c6:	00 c0       	rjmp	.+0      	; 0x8c8 <__stack+0x69>
- 8c8:	00 00       	nop
-	_delay_ms(250);
-	LCD1.SendCommand(1,0,charr);//6
- 8ca:	2c 2f       	mov	r18, r28
- 8cc:	40 e0       	ldi	r20, 0x00	; 0
- 8ce:	61 e0       	ldi	r22, 0x01	; 1
- 8d0:	80 e6       	ldi	r24, 0x60	; 96
- 8d2:	90 e0       	ldi	r25, 0x00	; 0
- 8d4:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD11SendCommandEhhh>
- 8d8:	9f e7       	ldi	r25, 0x7F	; 127
- 8da:	2a e1       	ldi	r18, 0x1A	; 26
- 8dc:	86 e0       	ldi	r24, 0x06	; 6
- 8de:	91 50       	subi	r25, 0x01	; 1
- 8e0:	20 40       	sbci	r18, 0x00	; 0
- 8e2:	80 40       	sbci	r24, 0x00	; 0
- 8e4:	e1 f7       	brne	.-8      	; 0x8de <__stack+0x7f>
- 8e6:	00 c0       	rjmp	.+0      	; 0x8e8 <__stack+0x89>
- 8e8:	00 00       	nop
-	_delay_ms(250);
-	LCD1.SendCommand(0,0,0B00000010);//6
- 8ea:	22 e0       	ldi	r18, 0x02	; 2
- 8ec:	40 e0       	ldi	r20, 0x00	; 0
- 8ee:	60 e0       	ldi	r22, 0x00	; 0
- 8f0:	80 e6       	ldi	r24, 0x60	; 96
- 8f2:	90 e0       	ldi	r25, 0x00	; 0
- 8f4:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD11SendCommandEhhh>
- 8f8:	9f e7       	ldi	r25, 0x7F	; 127
- 8fa:	2a e1       	ldi	r18, 0x1A	; 26
- 8fc:	86 e0       	ldi	r24, 0x06	; 6
- 8fe:	91 50       	subi	r25, 0x01	; 1
- 900:	20 40       	sbci	r18, 0x00	; 0
- 902:	80 40       	sbci	r24, 0x00	; 0
- 904:	e1 f7       	brne	.-8      	; 0x8fe <__stack+0x9f>
- 906:	00 c0       	rjmp	.+0      	; 0x908 <__stack+0xa9>
- 908:	00 00       	nop
-	_delay_ms(250);	
-	charr++;
- 90a:	cf 5f       	subi	r28, 0xFF	; 255
- 90c:	be cf       	rjmp	.-132    	; 0x88a <__stack+0x2b>
+ 88a:	ff cf       	rjmp	.-2      	; 0x88a <__stack+0x2b>
 
-0000090e <_GLOBAL__sub_I__ZN6CH_LCDC2Ev>:
+0000088c <_GLOBAL__sub_I__ZN6CH_LCDC2Ev>:
 #define _CH_LCD_
 #define delay 1
 #include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib\mlcd.h"
 #include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib\mlcd.cpp"
 
 CH_LCD LCD1;
- 90e:	80 e6       	ldi	r24, 0x60	; 96
- 910:	90 e0       	ldi	r25, 0x00	; 0
- 912:	0e 94 4a 00 	call	0x94	; 0x94 <_ZN6CH_LCDC1Ev>
- 916:	08 95       	ret
+ 88c:	80 e6       	ldi	r24, 0x60	; 96
+ 88e:	90 e0       	ldi	r25, 0x00	; 0
+ 890:	0e 94 4a 00 	call	0x94	; 0x94 <_ZN6CH_LCDC1Ev>
+ 894:	08 95       	ret
 
-00000918 <__tablejump2__>:
- 918:	ee 0f       	add	r30, r30
- 91a:	ff 1f       	adc	r31, r31
- 91c:	05 90       	lpm	r0, Z+
- 91e:	f4 91       	lpm	r31, Z
- 920:	e0 2d       	mov	r30, r0
- 922:	09 94       	ijmp
+00000896 <__tablejump2__>:
+ 896:	ee 0f       	add	r30, r30
+ 898:	ff 1f       	adc	r31, r31
+ 89a:	05 90       	lpm	r0, Z+
+ 89c:	f4 91       	lpm	r31, Z
+ 89e:	e0 2d       	mov	r30, r0
+ 8a0:	09 94       	ijmp
 
-00000924 <_exit>:
- 924:	f8 94       	cli
+000008a2 <_exit>:
+ 8a2:	f8 94       	cli
 
-00000926 <__stop_program>:
- 926:	ff cf       	rjmp	.-2      	; 0x926 <__stop_program>
+000008a4 <__stop_program>:
+ 8a4:	ff cf       	rjmp	.-2      	; 0x8a4 <__stop_program>

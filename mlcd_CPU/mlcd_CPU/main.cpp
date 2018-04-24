@@ -27,7 +27,7 @@ int main(void)
 	unsigned char charr;
 	while(1)
 	{
-		
+	/*	
 	LCD1.SendCommand(1,0,charr);//6
 	_delay_ms(250);
 	LCD1.SendCommand(1,0,charr);//6
@@ -37,6 +37,7 @@ int main(void)
 	LCD1.SendCommand(0,0,0B00000010);//6
 	_delay_ms(250);	
 	charr++;
+	*/
 	}
 	
 }
