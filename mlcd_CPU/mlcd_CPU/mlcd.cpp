@@ -1,17 +1,8 @@
 ﻿#include "mlcd.h"
 
-
-unsigned char row;
 unsigned char column;
-unsigned char MaxShowableAddressInOneLine; 
-
-
-
-#define Character_LCD_LINE0_DDRAMADDR		0x00
-#define Character_LCD_LINE1_DDRAMADDR		0x40
-#define Character_LCD_LINE2_DDRAMADDR		0x14
-#define Character_LCD_LINE3_DDRAMADDR		0x54
-
+const int line_TWO_ADDRESS = 64;
+bool testing= false;
 #define E_DELAY 1
 # ifdef _CH_LCD_
 
@@ -30,11 +21,10 @@ CH_LCD :: CH_LCD ()
 	D7_PORT = 0x1B ; D7_DDR = 0x1A ; D7_Bit = 6 ;	
 }
 
-void CH_LCD :: Init(int x , int y)//Initializes LCD
+void CH_LCD :: Init(int x)//Initializes LCD
 {
-	row = y;
 	column= x;
-	MaxShowableAddressInOneLine = y ;
+
 	
 	
 	_delay_ms(15);
@@ -84,8 +74,7 @@ void CH_LCD :: Init(int x , int y)//Initializes LCD
 	_delay_ms(E_DELAY);
 	_SFR_IO8(E_PORT)  &=~(1<<E_Bit);  // All other bits untouched and E = 0
 	_delay_ms(E_DELAY);
-	
-	SendCommand(0,0,0B00100000);//3/SETTING FUNCTION SET	//
+	SendCommand(0,0,0B00101000);//3/SETTING FUNCTION SET	//
 	_delay_ms(E_DELAY);
 	SendCommand(0,0,0B00001100);//4 Display on/off control
 	_delay_ms(E_DELAY);
@@ -194,9 +183,9 @@ void CH_LCD :: CursorMode(int mode )
 	}
 }
 
-void CH_LCD :: SendInteger(unsigned int Integer )//65535
+void CH_LCD :: SendInteger(unsigned int intengerNum )//65535
 {
-	unsigned int cacheInteger = Integer;
+	unsigned int cacheInteger = intengerNum;
 	
 	unsigned int num5 = cacheInteger /10000;//6
 	cacheInteger -= num5*10000;		//5535
@@ -292,6 +281,139 @@ void CH_LCD :: SendInteger(unsigned int Integer )//65535
 	}
 }
 
+void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.999
+{
+	
+	unsigned long int cacheDouble = doubleNum;
+	
+	
+	int divideNum;
+	unsigned long int tenNumber;
+	
+	if (doubleNum >= 100000000)
+	{
+		divideNum = 9;
+		tenNumber = 100000000;
+	}else if (doubleNum >= 10000000)
+	{
+		divideNum = 8;
+		tenNumber = 10000000;
+	}else if (doubleNum >= 1000000)
+	{
+		divideNum = 7;
+		tenNumber = 1000000;
+	}else if (doubleNum >= 100000)
+	{
+		divideNum = 6;
+		tenNumber = 100000;
+	}else if (doubleNum >= 10000)
+	{
+		divideNum = 5;
+		tenNumber = 10000;
+	}else if (doubleNum >= 1000)
+	{
+		divideNum = 4;
+		tenNumber = 1000;
+	}else if (doubleNum >= 100)
+	{
+		divideNum = 3;
+		tenNumber = 100;
+	}else if (doubleNum >= 10)
+	{
+		divideNum = 2;
+		tenNumber = 10;
+	}else if (doubleNum >= 1)
+	{
+		divideNum = 1;
+		tenNumber = 1;
+	}else
+	{
+		divideNum = 0;
+		tenNumber = 0;
+	}
+	/*
+	Clear();
+	SendString("tenNum:");
+	Goto(0,1);
+	SendInteger(tenNumber);
+	_delay_ms(2000);
+	Clear();
+	SendString("divideNum");
+	Goto(0,1);
+	SendInteger(divideNum);
+	_delay_ms(2000);
+	Clear();
+	*/
+	
+	
+	/* REMOVING . By INFORMATION*/
+	if (mantissaNum == 0)
+	{
+		cacheDouble = doubleNum * 1;
+		
+	}else if (mantissaNum == 1)
+	{
+		cacheDouble = doubleNum * 10;
+		
+	}else if (mantissaNum == 2)
+	{
+		cacheDouble = doubleNum * 100;
+		
+	}else if (mantissaNum == 3)
+	{
+		cacheDouble = doubleNum * 1000;
+		
+	}else if (mantissaNum == 4)
+	{
+		cacheDouble = doubleNum * 10000;
+		
+	}else if (mantissaNum == 5)
+	{
+		cacheDouble = doubleNum * 100000;
+		
+	}else if (mantissaNum == 6)
+	{
+		cacheDouble = doubleNum * 1000000;
+		
+	}else
+	{
+		cacheDouble = doubleNum * 1;
+	}
+
+	/*   Time To find out how many number it has been built = divideNum       for example 34343 is 5          */
+
+	
+
+	
+	
+	unsigned int data[10];
+	for (int i = 0; i <= divideNum ; i++)
+	{
+		data[i] = cacheDouble / tenNumber;
+		cacheDouble -= data[i]*tenNumber;
+		tenNumber /= 10;
+		
+		if (data[i] >= 10)
+		{
+			data[i] = 0;
+		}
+	}
+	
+	
+	
+	for (int i = 0 ; i < divideNum ; i++)
+	{
+		if (i == (divideNum-mantissaNum))
+		{
+			SendString(".");
+		}
+		if (data[i]<10)
+		{
+			SendInteger(data[i]);
+		}
+		
+	}
+}
 
 void CH_LCD :: Home()
 {
@@ -305,8 +427,13 @@ void CH_LCD :: Clear()
 
 void CH_LCD :: Goto(int x, int y)
 {
+	if (y== 1)
+	{
+		x += line_TWO_ADDRESS; 
+	}
 	
-	
+	SendCommand(0,0, 0b10000000 | x);
+	_delay_ms(1);
 }
 
 # endif

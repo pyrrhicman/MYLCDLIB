@@ -55,11 +55,12 @@ class CH_LCD
 	void SetD6Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D6_PORT = ADD_PORT ; D6_DDR = ADD_DDR ; D6_Bit = Bit ; }
 	void SetD7Pin(uint8_t ADD_PORT , uint8_t ADD_DDR , uint8_t Bit) { D7_PORT = ADD_PORT ; D7_DDR = ADD_DDR ; D7_Bit = Bit ; }
 	void SendCommand(uint8_t,uint8_t,uint8_t);									//forms data ready to send to 74HC164
-	void Init(int, int);																//Initializes LCD
+	void Init(int);																//Initializes LCD
 	void SendChar(uint8_t);
 	void SendString(char*);
 	void CursorMode(int);
 	void SendInteger(unsigned int);
+	void SendDouble(double,int);
 	void Home();
 	void Clear();
 	void Goto(int, int);
