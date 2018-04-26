@@ -30,15 +30,15 @@
     <EraseKey />
     <AsfFrameworkConfig>
       <framework-data xmlns="">
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.35.1" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.35.1" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -87,6 +87,11 @@
       <Value>libm</Value>
     </ListValues>
   </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.LibrarySearchPaths>
   <avrgcccpp.assembler.general.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.150\include</Value>
@@ -143,6 +148,11 @@
       <Value>libm</Value>
     </ListValues>
   </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>C:\Users\ICTP17-Askari\Github\MYLCDLIB\mlcd_CPU\Lib</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.LibrarySearchPaths>
   <avrgcccpp.assembler.general.IncludePaths>
     <ListValues>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.2.150\include</Value>
