@@ -283,6 +283,13 @@ void CH_LCD :: SendInteger(unsigned int intengerNum )//65535
 
 void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.999
 {
+	
+	SendInteger(doubleNum);
+	
+	
+	
+	
+	
 	double model1 = doubleNum*10;
 	//model1 -= 
 	unsigned long int cacheDouble = doubleNum;
@@ -290,7 +297,7 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 	
 	int divideNum;
 	unsigned long int tenNumber;
-	unsigned long int integerModel = doubleNum;
+	
 	
 	if (doubleNum >= 100000000)
 	{
