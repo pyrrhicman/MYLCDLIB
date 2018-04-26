@@ -655,10 +655,10 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x1b70
+.debug_info     0x00000000     0x1b80
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x4e6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
- .debug_info    0x000004e6     0x168a main.o
+ .debug_info    0x000004e6     0x169a main.o
 
 .debug_abbrev   0x00000000      0x7dd
  *(.debug_abbrev)
@@ -674,15 +674,15 @@ END GROUP
  *(.debug_frame)
  .debug_frame   0x00000000      0x1dc main.o
 
-.debug_str      0x00000000      0x7ae
+.debug_str      0x00000000      0x7c9
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
- .debug_str     0x00000196      0x618 main.o
-                                0x65f (size before relaxing)
+ .debug_str     0x00000196      0x633 main.o
+                                0x67a (size before relaxing)
 
-.debug_loc      0x00000000     0x162f
+.debug_loc      0x00000000     0x16a9
  *(.debug_loc)
- .debug_loc     0x00000000     0x162f main.o
+ .debug_loc     0x00000000     0x16a9 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
