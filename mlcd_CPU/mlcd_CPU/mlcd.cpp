@@ -283,18 +283,10 @@ void CH_LCD :: SendInteger(unsigned int intengerNum )//65535
 
 void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.999
 {
-	
-	SendInteger(doubleNum);
-	
-	
-	
-	
-	
-	double model1 = doubleNum*10;
-	//model1 -= 
-	unsigned long int cacheDouble = doubleNum;
-	
-	
+	unsigned long int integerModel = doubleNum;
+	SendInteger(integerModel);
+	double doubleModel= doubleNum - integerModel;
+	unsigned long int cacheDouble;
 	int divideNum;
 	unsigned long int tenNumber;
 	
@@ -358,70 +350,40 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 	/* REMOVING . By INFORMATION*/
 	if (mantissaNum == 0)
 	{
-		cacheDouble = doubleNum * 1;
+		cacheDouble = doubleModel * 1;
 		
 	}else if (mantissaNum == 1)
 	{
-		cacheDouble = doubleNum * 10;
+		cacheDouble = doubleModel * 10;
 		
 	}else if (mantissaNum == 2)
 	{
-		cacheDouble = doubleNum * 100;
+		cacheDouble = doubleModel * 100;
 		
 	}else if (mantissaNum == 3)
 	{
-		cacheDouble = doubleNum * 1000;
+		cacheDouble = doubleModel * 1000;
 		
 	}else if (mantissaNum == 4)
 	{
-		cacheDouble = doubleNum * 10000;
+		cacheDouble = doubleModel * 10000;
 		
 	}else if (mantissaNum == 5)
 	{
-		cacheDouble = doubleNum * 100000;
+		cacheDouble = doubleModel * 100000;
 		
 	}else if (mantissaNum == 6)
 	{
-		cacheDouble = doubleNum * 1000000;
+		cacheDouble = doubleModel * 1000000;
 		
 	}else
 	{
-		cacheDouble = doubleNum * 1;
+		cacheDouble = doubleModel * 1;
 	}
 
 	/*   Time To find out how many number it has been built = divideNum       for example 34343 is 5          */
-
-	
-
-	
-	
-	unsigned int data[10];
-	for (int i = 0; i <= divideNum ; i++)
-	{
-		data[i] = cacheDouble / tenNumber;
-		cacheDouble -= data[i]*tenNumber;
-		tenNumber /= 10;
-		
-		if (data[i] >= 10)
-		{
-			data[i] = 0;
-		}
-	}
-	
-	
-	
-	for (int i = 0 ; i < divideNum ; i++)
-	{
-		if (i == (divideNum-mantissaNum))
-		{
-			SendString(".");
-		}
-		if (data[i]<10)
-		{
-			SendInteger(data[i]);
-		}
-		
-	}
+	SendString(".");
+	SendInteger(cacheDouble);
 }
 
 void CH_LCD :: Home()

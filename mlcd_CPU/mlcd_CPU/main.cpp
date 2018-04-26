@@ -36,8 +36,8 @@ int main(void)
 	 //char* data = "Hello";
 	 int data =63;
 	 LCD1.SendCommand(0,0,0B10101000);
-	 double myDouble = 123.265;
-	 int x = myDouble*100;
+	 double myDouble = 12213.265;
+	 long int x = myDouble*1000;
 	while(1)
 	{
 		
