@@ -3,8 +3,8 @@
 #define F_CPU 8000000UL
 #define _CH_LCD_
 #define delay 1
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.cpp"
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.h"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\Lib\mlcd.cpp"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\Lib\mlcd.h"
 
 CH_LCD LCD1;
 

@@ -441,20 +441,20 @@ END GROUP
  .debug_abbrev  0x00000000      0x4a3 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_abbrev  0x000004a3      0x270 main.o
 
-.debug_line     0x00000000      0x56a
+.debug_line     0x00000000      0x57e
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x115 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
- .debug_line    0x00000115      0x455 main.o
+ .debug_line    0x00000115      0x469 main.o
 
 .debug_frame    0x00000000       0xa0
  *(.debug_frame)
  .debug_frame   0x00000000       0xa0 main.o
 
-.debug_str      0x00000000      0x5f2
+.debug_str      0x00000000      0x606
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.150/gcc/dev/atmega32/avr5/crtatmega32.o
- .debug_str     0x00000196      0x45c main.o
-                                0x49f (size before relaxing)
+ .debug_str     0x00000196      0x470 main.o
+                                0x4b3 (size before relaxing)
 
 .debug_loc      0x00000000      0x72c
  *(.debug_loc)

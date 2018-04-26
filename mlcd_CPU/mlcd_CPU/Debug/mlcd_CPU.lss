@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 00000713  00000000  00000000  00001b90  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000056a  00000000  00000000  000022a3  2**0
+  8 .debug_line   0000057e  00000000  00000000  000022a3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000a0  00000000  00000000  00002810  2**2
+  9 .debug_frame  000000a0  00000000  00000000  00002824  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005f2  00000000  00000000  000028b0  2**0
+ 10 .debug_str    00000606  00000000  00000000  000028c4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000072c  00000000  00000000  00002ea2  2**0
+ 11 .debug_loc    0000072c  00000000  00000000  00002eca  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000030  00000000  00000000  000035ce  2**0
+ 12 .debug_ranges 00000030  00000000  00000000  000035f6  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1291,10 +1291,6 @@ else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
  8a0:	cf 01       	movw	r24, r30
  8a2:	0e 94 69 00 	call	0xd2	; 0xd2 <_ZN6CH_LCD4InitEv>
 	
-	//PORTC=255;
-	//_delay_ms(2000);
-	//PORTC = 0;
-	//_delay_ms(2000);	
 	LCD1.SendCommand(0,0,0B00100000);//3
  8a6:	20 e2       	ldi	r18, 0x20	; 32
  8a8:	40 e0       	ldi	r20, 0x00	; 0
@@ -1375,8 +1371,8 @@ else			 _SFR_IO8(D4_PORT) &= ~(1<<D4_Bit);
 00000930 <_GLOBAL__sub_I__ZN6CH_LCDC2Ev>:
 #define _CH_LCD_
 #define delay 1
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.cpp"
-#include "D:\GitHub\MYLCDLIB\Lib\mlcd.h"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\Lib\mlcd.cpp"
+#include "C:\Users\ICTP17-Askari\Github\MYLCDLIB\Lib\mlcd.h"
 
 CH_LCD LCD1;
  930:	80 e6       	ldi	r24, 0x60	; 96
