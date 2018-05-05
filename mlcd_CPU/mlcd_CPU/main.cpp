@@ -36,18 +36,19 @@ int main(void)
 	 //char* data = "Hello";
 	 int data =63;
 	 LCD1.SendCommand(0,0,0B10101000);
-	 double myDouble = 1000000.9996;
+	 double myDouble = 950.122;
 	 int x = myDouble*100;
 	while(1)
 	{
 		
 		//LCD1.Clear();
 		LCD1.Goto(0,0);
-		LCD1.SendDouble(myDouble,5);//65535
+		LCD1.SendDouble(myDouble,2);//65535
 		LCD1.Goto(1,1);
 		LCD1.SendInteger(x);//65535
-		_delay_ms(20);
+		_delay_ms(200);
 		data++;
+		//myDouble = myDouble + 0.001;
 	}
 	
 }

@@ -281,14 +281,71 @@ void CH_LCD :: SendInteger(unsigned int intengerNum )//65535
 	}
 }
 
-void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.999
+void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )
 {
-	double model1 = doubleNum*10;
-	model1 -= 
+	
+	double double_type_cache1 = doubleNum;
+	//
+	unsigned long int integer_part_cache = doubleNum;
+	
+	double_type_cache1 -= (double)integer_part_cache;
+	
+	//int divideNum;
+	
+	unsigned long int integer_type_of_mantissa_cache;
+	//unsigned long int tenNumber;	
+	
+	if (mantissaNum == 0)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 1;
+		
+	}else if (mantissaNum == 1)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 10;
+		
+	}else if (mantissaNum == 2)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 100;
+		
+	}else if (mantissaNum == 3)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 1000;
+		
+	}else if (mantissaNum == 4)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 10000;
+		
+	}else if (mantissaNum == 5)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 100000;
+		
+	}else if (mantissaNum == 6)
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 1000000;
+		
+	}else
+	{
+		integer_type_of_mantissa_cache = double_type_cache1 * 1;
+	}	
+	
+	SendInteger(integer_part_cache);
+	SendString(".");
+	SendInteger(integer_type_of_mantissa_cache);
+	//Goto(1,1);
+	
+	
+	
+	/*
+	double model1 = doubleNum;
+	// 
 	unsigned long int cacheDouble = doubleNum;
 	
+	model1 -= cacheDouble;
 	
 	int divideNum;
+	
+	SendInteger(divideNum);
+	
 	unsigned long int tenNumber;
 	
 	if (doubleNum >= 100000000)
@@ -331,7 +388,7 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 	{
 		divideNum = 0;
 		tenNumber = 0;
-	}
+	}*/
 	/*
 	Clear();
 	SendString("tenNum:");
@@ -347,7 +404,7 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 	*/
 	
 	
-	/* REMOVING . By INFORMATION*/
+	/* REMOVING . By INFORMATION*//*
 	if (mantissaNum == 0)
 	{
 		cacheDouble = doubleNum * 1;
@@ -381,11 +438,7 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 		cacheDouble = doubleNum * 1;
 	}
 
-	/*   Time To find out how many number it has been built = divideNum       for example 34343 is 5          */
-
-	
-
-	
+	//  Time To find out how many number it has been built = divideNum       for example 34343 is 5          
 	
 	unsigned int data[10];
 	for (int i = 0; i <= divideNum ; i++)
@@ -413,7 +466,7 @@ void CH_LCD :: SendDouble(double doubleNum, int mantissaNum )//65535/ /// 985.99
 			SendInteger(data[i]);
 		}
 		
-	}
+	}*/
 }
 
 void CH_LCD :: Home()
