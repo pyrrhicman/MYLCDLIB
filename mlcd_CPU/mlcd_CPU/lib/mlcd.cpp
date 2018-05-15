@@ -21,9 +21,9 @@ CH_LCD :: CH_LCD ()
 	D7_PORT = 0x1B ; D7_DDR = 0x1A ; D7_Bit = 6 ;	
 }
 
-void CH_LCD :: Init(int x)//Initializes LCD
+void CH_LCD :: Init()//Initializes LCD
 {
-	column= x;
+	//column= x;
 
 	
 	
