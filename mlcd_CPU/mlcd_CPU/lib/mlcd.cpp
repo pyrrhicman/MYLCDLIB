@@ -5,7 +5,7 @@ const int line_TWO_ADDRESS = 64;
 bool testing= false;
 #define E_DELAY 1
 # ifdef _CH_LCD_
-
+//#pragma GCC diagnostic ignored "-Wwrite-strings"
 
 CH_LCD :: CH_LCD ()
 {
@@ -155,7 +155,7 @@ void CH_LCD :: SendChar(uint8_t sending_Char)		//Sends Char to LCD
 	SendCommand(1,0,sending_Char);
 }
 
-void CH_LCD :: SendString(char *String )
+void CH_LCD :: SendString(const char *String )
 {
 	while(*String)
 	{

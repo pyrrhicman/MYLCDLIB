@@ -57,7 +57,7 @@ class CH_LCD
 	void SendCommand(uint8_t,uint8_t,uint8_t);									//forms data ready to send to 74HC164
 	void Init();																//Initializes LCD
 	void SendChar(uint8_t);
-	void SendString(char*);
+	void SendString(const char*);
 	void CursorMode(int);
 	void SendInteger(unsigned int);
 	void SendDouble(double,int);
